@@ -37,7 +37,7 @@
 #define KEY_6 0x07
 #define KEY_7 0x08
 #define KEY_8 0x09
-#define KEY_9 0x09
+#define KEY_9 0x0A
 #define KEY_0 0x0B
 #define KEY_MINUS 0x0C
 #define KEY_EQUAL 0x0D
