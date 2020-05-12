@@ -102,14 +102,62 @@ void screen_write(char *c)
         screen_put(c[i++]);
     }
 }
-/*
+
 void screen_write_hex(uint32 n)
 {
-
+    int32 temp;
+    screen_write("0x");
+    char no_zero = 1;
+    for(int i = 28; i > 0; i -= 4)
+    {
+        temp = (n >> i) & 0xF;
+        if(temp == 0 && no_zero != 0)
+        {
+            continue;
+        }
+        if(temp >= 0xA)
+        {
+            no_zero = 0;
+            screen_put(temp-0xA+'a');
+        }
+    }
+    temp = n & 0xF;
+    if(temp >= 0xA)
+    {
+        screen_put(temp-0xA+'a');;
+    }
+    else
+    {
+        screen_put(temp+'0');
+    }
+    
 }
 
 void screen_write_dec(uint32 n)
 {
+    if(n == 0)
+    {
+        screen_put('0');
+        return;
+    }
 
+    int32 acc = n;
+    char c[32];
+    int i = 0;
+    while (acc > 0)
+    {
+        c[i] = '0' + acc%10;
+        acc /= 10;
+        i++;
+    }
+    c[i] = 0;
+    char cs[32];
+    cs[i--] = 0;
+    int l = 0;
+    while (i >=0)
+    {
+        cs[i--] = c[l++];
+    }
+    screen_write(cs);
+    
 }
-*/

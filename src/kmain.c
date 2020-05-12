@@ -6,7 +6,7 @@
 #include "idt.h"
 void kmain()
 {
-  //isr_init();
+  isr_init();
   idt_init();
   //gdt_init();
   
@@ -15,8 +15,8 @@ void kmain()
   //idt_init();
   //__asm__("sti");
   //int a = 0;
-  int b = 2/0;
- //__asm__("int $0x1");
+  //int b = 2/0;
+ __asm__("int $0x1");
 
   screen_write("Succesully boot JakoS");
 }

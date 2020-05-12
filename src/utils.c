@@ -8,13 +8,9 @@ void mem_cp(char *src, char *dest, int bytes_n)
     }
 }
 
-void mem_set(uint8 *dest, uint8 value, uint32 len)
-{
-    uint8 *tmp = (uint8*)dest;
-    for(; len != 0; len--)
-    {
-        *tmp++ = value;
-    }
+void memory_set(uint8 *dest, uint8 val, uint32 len) {
+    uint8 *temp = (uint8 *)dest;
+    for ( ; len != 0; len--) *temp++ = val;
 }
 
 void int_to_ascii(int num, char str[])

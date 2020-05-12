@@ -36,15 +36,14 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
-typedef struct
-{
+typedef struct{
+
     uint32 ds;
-    uint32 edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    uint32 edi, esi, ebp, ebx, edx, ecx, eax;
     uint32 int_no, err_code;
     uint32 eip, cs, eflags, useresp, ss;
-}registers;
+} registers_t;
 
-extern void isr_init();
-void isr_handler(registers *r);
-typedef void (*isr)(registers);
+void isr_init();
+void isr_handler(registers_t r);
 #endif
