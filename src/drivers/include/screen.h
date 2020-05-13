@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "common.h"
+#include "../../common/include/types.h"
 
 /* write a single char out to the screen*/
 void screen_put(char c);

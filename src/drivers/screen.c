@@ -1,5 +1,5 @@
-#include "screen.h"
-
+#include "./include/screen.h"
+#include "../common/include/types.h"
 struct Cursor{
     uint8 x;
     uint8 y;

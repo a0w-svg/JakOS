@@ -1,4 +1,4 @@
-#include "common.h"
+#include "./include/types.h"
 
 void out_byte(uint16 port, uint8 value)
 {
@@ -16,4 +16,9 @@ uint16 in_word(uint16 port)
     uint16 ret;
     asm volatile("inw %1, %0" : "=a" (ret) : "dN" (port));
     return ret;
+}
+
+void out_word(uint16 port, uint16 data)
+{
+    __asm__ __volatile__("out %%ax, %%dx" : : "a" (data), "d" (port));
 }

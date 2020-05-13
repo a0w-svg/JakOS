@@ -12,6 +12,7 @@ typedef int int32;
 void out_byte(uint16 port, uint8 value);
 uint8 in_byte(uint16 port);
 uint16 in_word(uint16 port);
+void out_word(uint16 port, uint16 data);
 
 #define low_16(address) (uint16)((address) & 0xFFFF);
 #define high_16(address) (uint16)(((address) >> 16 ) & 0xFFFF)
