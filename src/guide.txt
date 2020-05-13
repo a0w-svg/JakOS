@@ -1,0 +1,53 @@
+#############################################################################################################################
+                                            JakOS Project contrib 
+
+
+##############################################################################################################################
+  folders
+  boot/
+        boot.s - file to bootstrap kernel
+        boot.o - compiled file created on compile
+  libc/
+      include/
+          mem.h - header file c memory managment basic editon todo
+          string.h - header file c defined manipulate string(const char *s[]).
+     mem.c - code from mem.h  func declarations
+     string.c - code from string.h func declarations
+ kernel/
+        cpu/
+            include/
+                  idt.h - header file c IDT 
+                  isr.h - header file c ISR 
+                  timer_intterupts.h - header file c timer
+             idt.c - code from idt.h func declarations 
+             isr.c - code from isr.h func declarations
+             timer_interrupts.c - code from timer_interrupts.h func declarations
+     kmain.c - main c file for JakOS kernel
+  drivers/
+      include/
+              screen.h - header file c VGA basic driver
+              keyboard.h - header file c Keyboard driver
+      screen.c - code from screen.h func declarations
+      keyboard.c - code from keyboard.h func declarations
+      
+  ########################################################################################################################
+                                      Overview  JakOS  API
+  #########################################################################################################################
+  
+  screen.h
+        - screen_write(char *c); display text on screen
+                example use: screen_write("Hello World");
+          screen_put(char c);  display sigle character on screen
+                example use:  screen_put('c');
+          screen_clean(); - clean screen
+          
+          screen_write_dec(uint32 n); - display decimal number on screen
+                 example use: screen_write_dec(32);
+                warning - not tested.
+          screen_write_hex(uint32 n); - display hexadecimal number on screen
+                example use: screen_write_hex(0x32);
+                warning - not tested.
+ 
+                
+                                        
+  
