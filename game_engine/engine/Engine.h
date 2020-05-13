@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Player.h"
+#include "../player/Player.h"
 
 using namespace sf;
 

@@ -1,4 +1,4 @@
-#include "Engine.h"
+#include "../engine/Engine.h"
 
 void Engine::input()
 {
@@ -38,8 +38,9 @@ void Engine::input()
     {
         player.stopBottom();
     }
-    if(Keyboard::isKeyPressed(Keyboard::R))
+   /* if(Keyboard::isKeyPressed(Keyboard::R))
     {
         player.weap_reload();
     }
+    */
 }

@@ -3,7 +3,7 @@
 Player::Player()
 {
     speed = 400;
-    texture.loadFromFile("bob.png");
+    texture.loadFromFile("images/bob.png");
     sprite.setTexture(texture);
     position.x = 300;
     position.y = 200;

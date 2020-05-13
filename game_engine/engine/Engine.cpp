@@ -9,7 +9,7 @@ Engine::Engine()
     window.create(VideoMode(resolution.x, resolution.y),
     "ZSE", Style::Fullscreen);
 
-    back_texture.loadFromFile("background.jpg");
+    back_texture.loadFromFile("images/background.jpg");
     back_sprite.setTexture(back_texture);
 }
 void Engine::start()

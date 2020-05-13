@@ -25,6 +25,7 @@ class Player{
         void stopTop();
         void stopBottom();
         // weapon func
+        /*
         void weap_reload();
         void weap_shot();
         void switch_weapon();
@@ -32,6 +33,7 @@ class Player{
         void drop_item();
         void take_item();
         void use_item();
+        */
         //update display
         void update(float elapsedTime);
 
