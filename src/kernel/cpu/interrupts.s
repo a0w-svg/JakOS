@@ -1,6 +1,14 @@
-extern isr_handler
-extern irq_handler
-;isr global
+;-------------------------------------------------------------
+;                   JakOS Project module                     -
+;   useful resources:                                        -
+;   http://www.osdever.net/tutorials/view/interrupts         -
+;   -exceptions-and-idts-part-1-interrupts-isrs-irqs-the-pic -
+;-------------------------------------------------------------
+
+;export functions from c
+extern isr_handler ; isr_handler from isr.h file
+extern irq_handler ; irq_handler from isr.h file
+;isr global variables to use of c file
 global isr0
 global isr1
 global isr2
@@ -34,7 +42,7 @@ global isr29
 global isr30
 global isr31
 
-; irq globals
+; irq globals variables to use on c
 global irq0
 global irq1
 global irq2
@@ -51,6 +59,7 @@ global irq12
 global irq13
 global irq14
 global irq15
+;isr variables initialize
 isr0:
         cli
         push byte 0
@@ -212,7 +221,7 @@ isr31:
     push byte 31
     jmp isr_common_stub
 
-; IRQ handlers
+; IRQ handlers variables
 irq0:
     cli 
     push byte 0
@@ -294,7 +303,6 @@ irq15:
     push byte 15
     push byte 47
     jmp irq_common_stub
-
 
 
 isr_common_stub:

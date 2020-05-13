@@ -1,6 +1,12 @@
+/**********************************************************
+*               JakOS Project                             *
+*                                                         *
+*                                                         *
+***********************************************************/
+
 #include "./include/idt.h"
 
-void set_idt_gate(int n, uint32 handler)
+void idt_set_gate(int n, uint32 handler)
 {
     idt[n].low_offs = low_16(handler);
     idt[n].selector = KERNEL_CS;

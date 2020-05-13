@@ -1,8 +1,13 @@
+/******************************************************
+*               JakOS Project                         *
+*                                                     *
+*                                                     *
+*******************************************************/
 #ifndef ISR_H
 #define ISR_H
 
 #include "../../../common/include/types.h"
-
+//define IRQ constans
 #define IRQ0 32
 #define IRQ1 33 
 #define IRQ2 34
@@ -19,8 +24,9 @@
 #define IRQ13 45
 #define IRQ14 46 
 #define IRQ15 47
-extern int isr0();
-extern int isr1();
+//export func from nasm
+extern void isr0();
+extern void isr1();
 extern void isr2();
 extern void isr3();
 extern void isr4();
@@ -76,7 +82,7 @@ typedef struct{
     uint32 int_no, err_code;
     uint32 eip, cs, eflags, useresp, ss;
 } registers_t;
-
+//initialize isr func
 void isr_init();
 void isr_handler(registers_t r);
 

@@ -1,11 +1,18 @@
+/*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&                   JakOS Project                           &
+&                                                           &
+&   license: todo later                                     &
+&                                                           &
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
+
 #include "../../drivers/include/screen.h"
 #include "../../common/include/types.h"
 #include "./include/isr.h"
 #include "../../libc/include/unused.h"
 #include "../../libc/include/string.h"
-
+//clock varivable timer
 uint32 clock = 0;
-
+//callback timer
 static void time_callback(registers_t reg)
 {
     clock++;
@@ -17,7 +24,7 @@ static void time_callback(registers_t reg)
     screen_write("\n");
     UNUSED(reg);
 }
-
+//initialize timer func
 void init_timer(uint32 frequency)
 {
     reg_interrupt_handler(IRQ0, time_callback);

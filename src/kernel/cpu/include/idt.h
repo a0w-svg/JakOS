@@ -24,7 +24,7 @@ typedef struct
 idt_gate_t idt[IDT_ENTR];
 idt_register_t idt_regs;
 
-void set_idt_gate(int n, uint32 handler);
+void idt_set_gate(int n, uint32 handler);
 void idt_init();
 
 
