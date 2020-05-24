@@ -90,7 +90,7 @@ void printk_backspace()
     int row = get_offset_row(offset_cur);
     int column = get_offset_column(offset_cur);
     printk_char(0x08, row, column, WHITE_ON_BLACK);
-    set_cursor_position(offset_cur);
+    set_cursor_position(get_sc_offset(row, column));
 }
 void screen_clean()
 {

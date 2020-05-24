@@ -28,6 +28,21 @@ debug: os-image.bin kernel.elf
 	qemu-system-i386 -s -kernel kernel.elf -d guest_errors,int &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
+build_iso: kernel.bin menu.lst
+	mkdir -p iso/boot/grub              # create the folder structure
+	cp stage2_eltorito iso/boot/grub/   # copy the bootloader
+	cp kernel.bin iso/boot/     
+	cp menu.lst iso/boot/grub           # copy the grub configuration file
+	mkisofs -R                              \
+	  -b boot/grub/stage2_eltorito    \
+	  -no-emul-boot                   \
+	  -boot-load-size 4               \
+	  -A os                           \
+	  -input-charset utf8             \
+	  -quiet                          \
+	 -boot-info-table                \
+	  -o os.iso                       \
+	  iso
 #compile c files
 %.o: %.c ${HEADERS}
 	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
