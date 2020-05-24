@@ -9,8 +9,7 @@ CC =i686-elf-gcc
 #add macro to the debugger
 GDB = i686-elf-gdb
 #GCC flags
-CFLAGS = -g -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs \
-		 -Wall -Wextra -Werror
+CFLAGS = -g -ffreestanding -Wall -Wextra -fno-exceptions -m32
 
 #create bootable file 
 kernel.bin: boot/boot.o ${OBJ}

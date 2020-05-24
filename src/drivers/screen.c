@@ -1,163 +1,130 @@
 #include "./include/screen.h"
-#include "../common/include/types.h"
-struct Cursor{
-    uint8 x;
-    uint8 y;
-}__attribute__((packed));
-uint16 *vram = (uint16*)0xB8000;
-// move cursor
-struct Cursor cursor;
+#include "../common/include/port.h"
+#include "../libc/include/mem.h"
 
-static void mv_cursor()
+
+int get_offset_row(int offset)
 {
-   
-    uint16 cursor_location = cursor.y * 80 + cursor.x;
-    out_byte(0x3D4, 0x0F);
-    out_byte(0x3D5, (uint8) (cursor_location & 0xFF));
-    out_byte(0x3D4, 0x0E);
-    out_byte(0x3D5, (uint8) ((cursor_location >> 8) & 0xFF));
+    return offset / (2 * MAX_COLS);
 }
-
-// scroll text up by one line
-static void scroll_text()
+int get_offset_column(int offset)
 {
-    uint8 attrib_byte = (0 << 4) | (15 & 0x0F);
-    uint8 blank = 0x20 | (attrib_byte << 8);
-
-    if(cursor.y >=25)
-    {
-        int i;
-        for(i = 0*80; i< 24*80; i++)
-        {
-            vram[i] = vram[i+80];
-        }
-        for(int i = 24*80; i < 25*80; i++)
-        {
-            vram[i] = blank;
-        }
-        cursor.y = 24;
-    }
+    return (offset - (get_offset_row(offset) * 2 * MAX_COLS)) / 2;
 }
-
-void screen_put(char c)
-{
-    uint8 back_color = 0;
-    uint8 fore_color = 15;
-    
-    uint8 attrib_byte = (back_color << 4) | (fore_color & 0x0F);
-    uint16 attrib = attrib_byte << 8;
-    uint16 *location;
-
-    if(c == 0x08 && cursor.x)
-    {
-        cursor.x--;
-    }
-    else if (c == 0x09)
-    {
-        cursor.x = (cursor.x+8) & ~(8-1);
-    }
-    else if(c == '\r')
-    {
-        cursor.x = 0;
-    }
-    else if(c == '\n')
-    {
-        cursor.x = 0;
-        cursor.y++;
-    }
-    else if(c >= ' ')
-    {
-        location = vram + (cursor.y*80 + cursor.x);
-        *location = c | attrib;
-        cursor.x++;
-    }
-    if(cursor.x >= 80)
-    {
-        cursor.x = 0;
-        cursor.y++;
-    }
-    scroll_text();
-    mv_cursor();
-}
-/* clear screen to black background */
-void screen_clean()
-{
-    uint8 attrib_byte = (0 << 4) | (15 & 0x0F);
-    uint16 blank = 0x20 | (attrib_byte << 8);
-    int i;
-    for(i = 0; i < 80*25; i++)
-    {
-        vram[i] = blank;
-    }
-    cursor.x = 0;
-    cursor.y = 0;
-    mv_cursor();
-}
-
-void screen_write(char *c)
+void printk(char *txt)
 {
     int i = 0;
-    while(c[i])
+    while(txt[i] != 0)
     {
-        screen_put(c[i++]);
+        printk_char(txt[i++], -1, -1, WHITE_ON_BLACK);
     }
 }
 
-void screen_write_hex(uint32 n)
+void printk_char(char character, int row, int column, char attrib_byte)
 {
-    int32 temp;
-    screen_write("0x");
-    char no_zero = 1;
-    for(int i = 28; i > 0; i -= 4)
+    uint8_t *vram = (uint8_t *) VIDEO_ADDR;
+
+    if(!attrib_byte)
     {
-        temp = (n >> i) & 0xF;
-        if(temp == 0 && no_zero != 0)
-        {
-            continue;
-        }
-        if(temp >= 0xA)
-        {
-            no_zero = 0;
-            screen_put(temp-0xA+'a');
-        }
+        attrib_byte = WHITE_ON_BLACK;
     }
-    temp = n & 0xF;
-    if(temp >= 0xA)
+    int offset_mem;
+
+    if(column >= 0 && row >= 0)
     {
-        screen_put(temp-0xA+'a');;
+        offset_mem = get_sc_offset(row, column);
     }
     else
     {
-        screen_put(temp+'0');
+        offset_mem = get_cur();
     }
     
+    if(character == '\n')
+    {
+        int rows_term = offset_mem / (2*MAX_COLS);
+        offset_mem = get_sc_offset(rows_term, MAX_COLS-1);
+    }
+    else
+    {
+        vram[offset_mem] = character;
+        vram[offset_mem+1] = attrib_byte;
+    }
+
+    offset_mem += 2;
+    offset_mem = handle_scroll(offset_mem, attrib_byte);
+    set_cursor_position(offset_mem);  
 }
 
-void screen_write_dec(uint32 n)
+int get_sc_offset(int row, int column)
 {
-    if(n == 0)
+    return (row * 80 + column) * 2;
+}
+
+int get_cur()
+{
+    port_byte_out(REG_SCREEN_CTRL, 14);
+    int offset_mem = port_byte_in(REG_SCREEN_DATA) << 8;
+    port_byte_out(REG_SCREEN_CTRL, 15);
+    offset_mem += port_byte_in(REG_SCREEN_DATA);
+    return offset_mem * 2;
+}
+
+void set_cursor_position(uint32_t offset_x)
+{
+    offset_x /= 2;
+
+    port_byte_out(REG_SCREEN_CTRL, 14);
+    port_byte_out(REG_SCREEN_DATA, (offset_x >> 8));
+    port_byte_out(REG_SCREEN_CTRL, 15);
+    port_byte_out(REG_SCREEN_DATA, offset_x);
+}
+
+void printk_backspace()
+{
+    int offset_cur = get_cur()-2;
+    int row = get_offset_row(offset_cur);
+    int column = get_offset_column(offset_cur);
+    printk_char(0x08, row, column, WHITE_ON_BLACK);
+}
+void screen_clean()
+{
+    int row = 0;
+    int column = 0;
+
+    for(row = 0; row < MAX_ROWS; row++)
     {
-        screen_put('0');
-        return;
+        for(column = 0; column < MAX_COLS; column++)
+        {
+            printk_char(' ', row, column, WHITE_ON_BLACK);
+        }
+    }
+    set_cursor_position(get_sc_offset(0,0));
+}
+
+
+int handle_scroll(int cursor_offset_pos, char attrib_byte)
+{
+    char *dst_Row, *source_row;
+    int i;
+
+    if(cursor_offset_pos < MAX_ROWS * MAX_COLS * 2)
+    {
+        return cursor_offset_pos;
     }
 
-    int32 acc = n;
-    char c[32];
-    int i = 0;
-    while (acc > 0)
+    for(i = 1; i < MAX_ROWS; i++)
     {
-        c[i] = '0' + acc%10;
-        acc /= 10;
-        i++;
+        source_row = (char*) get_sc_offset(i, 0) + VIDEO_ADDR;
+        dst_Row = (char*) get_sc_offset(i-1, 0) + VIDEO_ADDR;
+        mem_cp(dst_Row, source_row, MAX_COLS * 2);
     }
-    c[i] = 0;
-    char cs[32];
-    cs[i--] = 0;
-    int l = 0;
-    while (i >=0)
+
+    char* last_Row = (char*) get_sc_offset(MAX_ROWS-1, 0) + VIDEO_ADDR;
+    for(i = 0; i < MAX_COLS; i++)
     {
-        cs[i--] = c[l++];
+        last_Row[2*i] = ' ';
+        last_Row[2*i-1] = attrib_byte;
     }
-    screen_write(cs);
-    
+    cursor_offset_pos -= 2 * MAX_COLS;
+    return cursor_offset_pos;
 }

@@ -3,5 +3,5 @@
 #include "../../common/include/types.h"
 #include "../../kernel/cpu/include/isr.h"
 //define constans
-
+void init_keyboard();
 #endif

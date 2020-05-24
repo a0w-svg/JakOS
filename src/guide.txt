@@ -35,17 +35,17 @@
   #########################################################################################################################
   
   screen.h
-        - screen_write(char *c); display text on screen
-                example use: screen_write("Hello World");
+        - printk(char *c); display text on screen
+                example use: printk("Hello World");
           screen_put(char c);  display sigle character on screen
                 example use:  screen_put('c');
           screen_clean(); - clean screen
           
-          screen_write_dec(uint32 n); - display decimal number on screen
-                 example use: screen_write_dec(32);
+          printk_dec(uint32_t n); - display decimal number on screen
+                 example use: printk_dec(32);
                 warning - not tested.
-          screen_write_hex(uint32 n); - display hexadecimal number on screen
-                example use: screen_write_hex(0x32);
+          printk_hex(uint32_t n); - display hexadecimal number on screen
+                example use: printk_hex(0x32);
                 warning - not tested.
  
                 

@@ -9,5 +9,5 @@
 #define TIMER_INTERRUPTS_H
 #include "../../../common/include/types.h"
 //initialize PIC
-void init_timer(uint32 frequency);
+void init_timer(uint32_t frequency);
 #endif

@@ -1,5 +1,5 @@
 #include "./include/string.h"
-
+#include <stdint.h>
 // K&R implementation
 
 void int_to_ascii(int num, char str[])
@@ -21,6 +21,41 @@ void int_to_ascii(int num, char str[])
     reverse(str);
 }
 
+void hex_to_ascii(int num, char str[])
+{
+    append(str, '0');
+    append(str, 'x');
+    char zeros = 0;
+
+    int32_t temp;
+    int i;
+    for(i = 28; i > 0; i-= 4)
+    {
+        temp = (num >> i) & 0xF;
+        if(temp == 0 && zeros == 0)
+        {
+            continue;
+        }
+        zeros = 1;
+        if(temp > 0xA)
+        {
+            append(str, temp - 0xA + 'a');
+        }
+        else
+        {
+            append(str, temp + '0');
+        }
+    }
+    temp = num & 0xF;
+    if(temp >= 0xA)
+    {
+        append(str, temp - 0xA + 'a');
+    }
+    else
+    {
+        append(str, temp + '0');
+    }
+}
 // K&R
 void reverse(char s[])
 {

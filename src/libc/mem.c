@@ -8,8 +8,24 @@ void mem_cp(char *src, char *dest, int bytes_n)
     }
 }
 
-void mem_set(uint8 *dest, uint8 val, uint32 length)
+void mem_set(uint8_t *dest, uint8_t val, uint32_t length)
 {
-     uint8 *temp = (uint8 *)dest;
+     uint8_t *temp = (uint8_t *)dest;
     for ( ; length != 0; length--) *temp++ = val;
+}
+uint32_t free_memory_addr = 0x10000;
+uint32_t malloc_k(size_t size, int align, uint32_t *phys_address)
+{
+    if(align == 1 && (free_memory_addr & 0xFFFFF000))
+    {
+        free_memory_addr &= 0xFFFFF000;
+        free_memory_addr += 0x1000;
+    }
+    if(phys_address)
+    {
+        *phys_address = free_memory_addr;
+    }
+    uint32_t ret = free_memory_addr;
+    free_memory_addr += size;
+    return ret;
 }

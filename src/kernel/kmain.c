@@ -5,17 +5,31 @@
 #include "../common/include/types.h"
 #include "../drivers/include/keyboard.h"
 #include "./cpu/include/timer_interrupts.h"
-
+#include "kmain.h"
+#include "../libc/include/mem.h"
+#include "../libc/include/string.h"
 void kmain()
 {
   isr_init();
-  
+  irq_init();
   screen_clean();
-  screen_write("welcome \n");
-  asm volatile("sti");
-  init_timer(50);
+  printk("welcome \n");
+  
+  
   
     //init_keyboard();
-  //screen_write("Succesully boot JakoS");
+  //printk("Succesully boot JakoS");
   
+}
+
+void input(char *input_us)
+{
+  if(strcmp(input_us, "END") == 0)
+  {
+    printk("halt\n");
+    asm volatile("hlt");
+  }
+  printk("You said: ");
+  printk(input_us);
+  printk("\n>");
 }
