@@ -24,11 +24,9 @@ run: kernel.bin
 	qemu-system-i386 -kernel kernel.bin
 
 #debug compiled image
-debug: os-image.bin kernel.elf
-	qemu-system-i386 -s -kernel kernel.elf -d guest_errors,int &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
-
-build_iso: kernel.bin menu.lst
+run-iso: 
+		qemu-system-i386 -cdrom JakOS.iso
+build-iso: kernel.bin menu.lst
 	mkdir -p iso/boot/grub              # create the folder structure
 	cp stage2_eltorito iso/boot/grub/   # copy the bootloader
 	cp kernel.bin iso/boot/     
@@ -41,7 +39,7 @@ build_iso: kernel.bin menu.lst
 	  -input-charset utf8             \
 	  -quiet                          \
 	 -boot-info-table                \
-	  -o os.iso                       \
+	  -o JakOS.iso                       \
 	  iso
 #compile c files
 %.o: %.c ${HEADERS}
