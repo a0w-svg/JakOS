@@ -44,6 +44,11 @@ void printk_char(char character, int row, int column, char attrib_byte)
         int rows_term = offset_mem / (2*MAX_COLS);
         offset_mem = get_sc_offset(rows_term, MAX_COLS-1);
     }
+    else if(character == 0x08)
+    {
+        vram[offset_mem] = ' ';
+        vram[offset_mem+1] = attrib_byte;
+    }
     else
     {
         vram[offset_mem] = character;
@@ -85,6 +90,7 @@ void printk_backspace()
     int row = get_offset_row(offset_cur);
     int column = get_offset_column(offset_cur);
     printk_char(0x08, row, column, WHITE_ON_BLACK);
+    set_cursor_position(offset_cur);
 }
 void screen_clean()
 {
