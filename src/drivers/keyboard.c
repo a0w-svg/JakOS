@@ -32,12 +32,12 @@ static void keyboard_callback(registers_t *regs)
     {
         printk("\n");
         input(buf);
-        buf[0] = '\n';
+        buf[0] = '\0';
     }
     else if(scan_code == BACKSPACE)
     {
         back_space(buf);
-        printk_backspace();
+        key_backspace();
     }
     else
     {

@@ -1,6 +1,6 @@
 #include "./include/mem.h"
 
-void mem_cp(char *src, char *dest, int bytes_n)
+void mem_cp(uint8_t *src, uint8_t *dest, int bytes_n)
 {
     for(int i = 0; i < bytes_n; i++)
     {

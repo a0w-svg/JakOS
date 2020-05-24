@@ -2,135 +2,151 @@
 #include "../common/include/port.h"
 #include "../libc/include/mem.h"
 
+//private API
+int get_cur_offset();
+void set_cur_offset(int offset);
+int printk_char(char ch, int column, int row, char attrib);
+int get_offset_mem(int column, int row);
+int get_offset_row(int offset);
+int get_offset_column(int offset);
 
+//public API
+
+void printk_at(char *txt, int column, int row)
+{
+    int offset;
+    if(column >= 0 && row >= 0)
+    {
+        offset = get_offset_mem(column, row);
+    }
+    else
+    {
+        offset = get_cur_offset();
+        row = get_offset_row(offset);
+        column = get_offset_column(offset);
+    }
+    int i = 0;
+    while(txt[i] != 0)
+    {
+        offset = printk_char(txt[i++], column, row, WHITE_ON_BLACK);
+        row = get_offset_row(offset);
+        column = get_offset_column(offset);
+    }
+}
+void printk(char *txt)
+{
+    printk_at(txt, -1, -1);
+}
+void key_backspace()
+{
+    int offset = get_cur_offset()-2;
+    int row = get_offset_row(offset);
+    int column = get_offset_column(offset);
+    printk_char(0x08, column, row, WHITE_ON_BLACK);
+}
+
+// private functions
+
+int printk_char(char ch, int column, int row, char attrib)
+{
+    uint8_t *vram = (uint8_t*)VIDEO_ADDR;
+    if(!attrib)
+    {
+        attrib = WHITE_ON_BLACK;
+    }
+
+    if(column >= MAX_COLS || row >= MAX_ROWS)
+    {
+        vram[2*(MAX_COLS)*(MAX_ROWS)-2] = 'E';
+        vram[2*(MAX_COLS)*(MAX_ROWS)-1] = WHITE_ON_BLACK;
+        return get_offset_mem(column, row);
+    }
+
+    int offset;
+    if(column >= 0 && row >= 0)
+    {
+        offset = get_offset_mem(column, row);
+    }
+    else
+    {
+        offset = get_cur_offset();
+    }
+
+    if(ch == '\n')
+    {
+        row = get_offset_row(offset);
+        offset = get_offset_mem(0, row+1);
+    }
+    else if(ch == 0x08)
+    {
+        vram[offset] = ' ';
+        vram[offset+1] = attrib;
+    }
+    else
+    {
+        vram[offset] = ch;
+        vram[offset+1] = attrib;
+        offset += 2;
+    }
+    
+    if(offset >= MAX_ROWS * MAX_COLS * 2)
+    {
+        int i;
+        for(i = 1; i < MAX_ROWS; i++)
+        {
+            mem_cp((uint8_t*)(get_offset_mem(0, i) + VIDEO_ADDR),
+                        (uint8_t*)(get_offset_mem(0, i-1) + VIDEO_ADDR),
+                        MAX_COLS * 2);
+        }
+        char *last_line = (char*) (get_offset_mem(0, MAX_ROWS-1) + (uint8_t*) VIDEO_ADDR);
+        for(i = 0; i < MAX_COLS * 2; i++)
+        {
+            last_line[i] = 0;
+        }
+        offset -= 2 * MAX_COLS;
+    }
+    set_cur_offset(offset);
+    return offset;
+}
+int get_cur_offset()
+{
+    port_byte_out(REG_SCREEN_CTRL, 14);
+    int offset = port_byte_in(REG_SCREEN_DATA) << 8;
+    port_byte_out(REG_SCREEN_CTRL, 15);
+    offset += port_byte_in(REG_SCREEN_DATA);
+    return offset * 2;
+}
+void set_cur_offset(int offset)
+{
+    offset /= 2;
+    port_byte_out(REG_SCREEN_CTRL, 14);
+    port_byte_out(REG_SCREEN_DATA, (uint8_t)(offset >> 8));
+    port_byte_out(REG_SCREEN_CTRL, 15);
+    port_byte_out(REG_SCREEN_DATA,(uint8_t)(offset & 0xff));
+}
+void screen_clean()
+{
+    int term_size = MAX_COLS * MAX_ROWS;
+    int i;
+    uint8_t *term = (uint8_t*) VIDEO_ADDR;
+
+    for(i = 0; i < term_size; i++)
+    {
+        term[i*2] = ' ';
+        term[i*2+1] = WHITE_ON_BLACK;
+    }
+    set_cur_offset(get_offset_mem(0,0));
+}
+int get_offset_mem(int column, int row)
+{
+    return 2 * (row * MAX_COLS + column);
+}
 int get_offset_row(int offset)
 {
     return offset / (2 * MAX_COLS);
 }
 int get_offset_column(int offset)
 {
-    return (offset - (get_offset_row(offset) * 2 * MAX_COLS)) / 2;
-}
-void printk(char *txt)
-{
-    int i = 0;
-    while(txt[i] != 0)
-    {
-        printk_char(txt[i++], -1, -1, WHITE_ON_BLACK);
-    }
+    return (offset - (get_offset_row(offset)*2*MAX_COLS)) / 2;
 }
 
-void printk_char(char character, int row, int column, char attrib_byte)
-{
-    uint8_t *vram = (uint8_t *) VIDEO_ADDR;
-
-    if(!attrib_byte)
-    {
-        attrib_byte = WHITE_ON_BLACK;
-    }
-    int offset_mem;
-
-    if(column >= 0 && row >= 0)
-    {
-        offset_mem = get_sc_offset(row, column);
-    }
-    else
-    {
-        offset_mem = get_cur();
-    }
-    
-    if(character == '\n')
-    {
-        int rows_term = offset_mem / (2*MAX_COLS);
-        offset_mem = get_sc_offset(rows_term, MAX_COLS-1);
-    }
-    else if(character == 0x08)
-    {
-        vram[offset_mem] = ' ';
-        vram[offset_mem+1] = attrib_byte;
-    }
-    else
-    {
-        vram[offset_mem] = character;
-        vram[offset_mem+1] = attrib_byte;
-    }
-
-    offset_mem += 2;
-    offset_mem = handle_scroll(offset_mem, attrib_byte);
-    set_cursor_position(offset_mem);  
-}
-
-int get_sc_offset(int row, int column)
-{
-    return (row * 80 + column) * 2;
-}
-
-int get_cur()
-{
-    port_byte_out(REG_SCREEN_CTRL, 14);
-    int offset_mem = port_byte_in(REG_SCREEN_DATA) << 8;
-    port_byte_out(REG_SCREEN_CTRL, 15);
-    offset_mem += port_byte_in(REG_SCREEN_DATA);
-    return offset_mem * 2;
-}
-
-void set_cursor_position(uint32_t offset_x)
-{
-    offset_x /= 2;
-
-    port_byte_out(REG_SCREEN_CTRL, 14);
-    port_byte_out(REG_SCREEN_DATA, (offset_x >> 8));
-    port_byte_out(REG_SCREEN_CTRL, 15);
-    port_byte_out(REG_SCREEN_DATA, offset_x);
-}
-
-void printk_backspace()
-{
-    int offset_cur = get_cur()-2;
-    int row = get_offset_row(offset_cur);
-    int column = get_offset_column(offset_cur);
-    printk_char(0x08, row, column, WHITE_ON_BLACK);
-    set_cursor_position(get_sc_offset(row, column));
-}
-void screen_clean()
-{
-    int row = 0;
-    int column = 0;
-
-    for(row = 0; row < MAX_ROWS; row++)
-    {
-        for(column = 0; column < MAX_COLS; column++)
-        {
-            printk_char(' ', row, column, WHITE_ON_BLACK);
-        }
-    }
-    set_cursor_position(get_sc_offset(0,0));
-}
-
-
-int handle_scroll(int cursor_offset_pos, char attrib_byte)
-{
-    char *dst_Row, *source_row;
-    int i;
-
-    if(cursor_offset_pos < MAX_ROWS * MAX_COLS * 2)
-    {
-        return cursor_offset_pos;
-    }
-
-    for(i = 1; i < MAX_ROWS; i++)
-    {
-        source_row = (char*) get_sc_offset(i, 0) + VIDEO_ADDR;
-        dst_Row = (char*) get_sc_offset(i-1, 0) + VIDEO_ADDR;
-        mem_cp(dst_Row, source_row, MAX_COLS * 2);
-    }
-
-    char* last_Row = (char*) get_sc_offset(MAX_ROWS-1, 0) + VIDEO_ADDR;
-    for(i = 0; i < MAX_COLS; i++)
-    {
-        last_Row[2*i] = ' ';
-        last_Row[2*i-1] = attrib_byte;
-    }
-    cursor_offset_pos -= 2 * MAX_COLS;
-    return cursor_offset_pos;
-}
