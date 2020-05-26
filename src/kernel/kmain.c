@@ -14,12 +14,10 @@ void kmain()
   irq_init();
   screen_clean();
   printk("welcome \n");
-  
-  
-  
-    //init_keyboard();
-  //printk("Succesully boot JakoS");
-  
+  printk("Succesully boot JakoS\n");
+  // test interupts
+  printk("Testing Interrupts\n");
+  asm volatile("int $0x1");
 }
 
 void input(char *input_us)
