@@ -8,17 +8,24 @@ Rose-lk kernel x86 and JakOS
 		make build-iso #build iso image
 		make run-iso #run compiled JakOS image
 
-## Todo list:
-  Memory management half implement <br>
-  Paging  <br>
+## To-do list:
+  Memory management - halfway done <br>
+  VGA driver - done
+  Paging - halfway done  <br>
   userspace <br>
   filesystem <br>
- 
+  ACPI <br>
+  advanted shell <br>
+  32 bit entry - done <br>
+  ATA driver <br>
+  
+  
  
 
-# Thanks:
+## Thanks:
 https://wiki.osdev.org <br>																																													
-http://www.jamesmolloy.co.uk/tutorial_html/1.-Environment%20setup.html <br>																										https://github.com/cfenollosa/os-tutorial // good tutorial <br>
+http://www.jamesmolloy.co.uk/tutorial_html/1.-Environment%20setup.html <br>																									https://github.com/cfenollosa/os-tutorial // good tutorial <br>
+## Contrib:
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
