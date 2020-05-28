@@ -23,8 +23,8 @@ Rose-lk kernel x86 and JakOS
  
 
 ## Thanks:
-https://wiki.osdev.org <br>																																													
-http://www.jamesmolloy.co.uk/tutorial_html/1.-Environment%20setup.html <br>																									https://github.com/cfenollosa/os-tutorial // good tutorial <br>
+  https://wiki.osdev.org <br>
+  http://www.jamesmolloy.co.uk/tutorial_html/1.-Environment%20setup.html <br>								   https://github.com/cfenollosa/os-tutorial // good tutorial <br>
 ## Contrib:
 
 ## License
