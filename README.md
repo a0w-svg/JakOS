@@ -1,12 +1,24 @@
 # JakOS
-Rose-lk kernel x86 and JakOS 
+Rose-lk kernel x86 and JakOS
 
-useful resources:
-https://wiki.osdev.org/Main_Page
-https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html
+## Build guide
+	bash
+		make #build JakOS
+		make run #run compiled JakOS
+		make build-iso #build iso image
+		make run-iso #run compiled JakOS image
 
+## Todo list:
+  Memory management half implement <br>
+  Paging  <br>
+  userspace <br>
+  filesystem <br>
+ 
+ 
 
-todo list:
-gdt complete
-interupts half working
+# Thanks:
+https://wiki.osdev.org <br>																																													
+http://www.jamesmolloy.co.uk/tutorial_html/1.-Environment%20setup.html <br>																										https://github.com/cfenollosa/os-tutorial // good tutorial <br>
 
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
