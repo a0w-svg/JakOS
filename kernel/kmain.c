@@ -15,9 +15,9 @@ void kmain(multiboot_info_t *mbd)
   isr_init();
   irq_init();
   screen_clean();
-  printk("welcome \n");
-  printk("Success boot JakOS\n");
-  printk("Please write HELP for a list of commands\n");
+  printk("Welcome! \n");
+  printk("Successfully booted JakOS\n");
+  printk("Type HELP for a list of commands\n");
   printk("JakOS>"); 
 }
 
@@ -30,23 +30,23 @@ void input(char *input_us)
   }
   if(strcmp(input_us, "HELP") == 0)
   {
-    printk("list commands:\n");
+    printk("list of commands:\n");
     printk("SHUTDOWN - shutdown computer\n");
-    printk("EDIT - edit file todo currently not working\n");
-    printk("REMOVE - delete file todo currently not working\n");
-    printk("MOVE - move file to indicated path - todo currently not working\n");
-    printk("CREDITS - display OS version and autors\n");
+    printk("EDIT - edit file todo – currently not working\n");
+    printk("REMOVE - delete file todo – currently not working\n");
+    printk("MOVE - move file to indicated path - todo – currently not working\n");
+    printk("CREDITS - display OS version and authors\n");
     printk("CALC - simple calculator\n");
 
   }
   if(strcmp(input_us, "CALC") == 0)
   {
-    printk("Welcome in JakOS calculator\n");
+    printk("Welcome to JakOS calculator\n");
     printk("Options: /n");
     printk("1. add two numbers\n");
-    printk("2. subtraction two nubers\n");
+    printk("2. subtract two nubers\n");
     printk("3. divide two numbers\n");
-    printk("4. multiplication two numbers\n");
+    printk("4. multiply two numbers\n");
     input_us[0] = '\0';
     printk("your option: ");
     printk(input_us);
