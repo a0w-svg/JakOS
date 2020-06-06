@@ -11,7 +11,9 @@
 #include "../boot/multiboot.h"
 #include "../drivers/include/speaker.h"
 #include "./mm/include/kmalloc.h"
+#include "../drivers/ports/include/serial_port.h"
 #include <stddef.h>
+
 
 void kmain()
 {
@@ -19,6 +21,7 @@ void kmain()
   isr_init();
   irq_init();
   heap_init();
+  init_serial();
   screen_clean();
   beep();
   
@@ -56,6 +59,7 @@ void input(char *input_us)
   else
   {
     printk("wrong command please enter currect command\n");
+    write_serial('a');
   }
   printk("\nJakOS>");
 }
