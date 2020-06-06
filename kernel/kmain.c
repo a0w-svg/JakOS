@@ -1,21 +1,28 @@
 #include "../drivers/include/screen.h"
-//#include "gdt.h"
+#include "./cpu/include/gdt.h"
 #include "./cpu/include/isr.h"
 #include "./cpu/include/idt.h"
 #include "../common/include/types.h"
 #include "../drivers/include/keyboard.h"
-#include "./cpu/include/timer_interrupts.h"
+#include "./cpu/include/pit.h"
 #include "kmain.h"
 #include "../libc/include/mem.h"
 #include "../libc/include/string.h"
 #include "../boot/multiboot.h"
+#include "../drivers/include/speaker.h"
+#include "./mm/include/kmalloc.h"
+#include <stddef.h>
 
-void kmain(multiboot_info_t *mbd)
+void kmain()
 {
+  init_gdt();
   isr_init();
   irq_init();
+  heap_init();
   screen_clean();
-  printk("Welcome! \n");
+  beep();
+  
+  printk("welcome \n");
   printk("Successfully booted JakOS\n");
   printk("Type HELP for a list of commands\n");
   printk("JakOS>"); 
@@ -28,53 +35,23 @@ void input(char *input_us)
     printk("halt\n");
     asm volatile("hlt");
   }
-  if(strcmp(input_us, "HELP") == 0)
+  else if(strcmp(input_us, "HELP") == 0)
   {
     printk("list of commands:\n");
     printk("SHUTDOWN - shutdown computer\n");
-    printk("EDIT - edit file todo – currently not working\n");
-    printk("REMOVE - delete file todo – currently not working\n");
-    printk("MOVE - move file to indicated path - todo – currently not working\n");
-    printk("CREDITS - display OS version and authors\n");
+    printk("EDIT - edit file todo - currently not working\n");
+    printk("REMOVE - delete file todo -currently not working\n");
+    printk("MOVE - move file to indicated path - todo currently not working\n");
+    printk("CREDITS - display OS version and autors\n");
     printk("CALC - simple calculator\n");
-
   }
-  if(strcmp(input_us, "CALC") == 0)
+  else if(strcmp(input_us, "CREDITS") == 0)
   {
-    printk("Welcome to JakOS calculator\n");
-    printk("Options: /n");
-    printk("1. add two numbers\n");
-    printk("2. subtract two nubers\n");
-    printk("3. divide two numbers\n");
-    printk("4. multiply two numbers\n");
-    input_us[0] = '\0';
-    printk("your option: ");
-    printk(input_us);
-    int a, b, sum;
-    char num[3];
-    if(strcmp(input_us, "1") == 0)
-    {
-      printk("please enter first number: ");
-      a =(int)input_us;
-      printk(input_us);
-      printk("please enter second number: ");
-      b = (int)input_us;
-      printk(input_us);
-      sum = a + b;
-      int_to_ascii(a, num);
-      printk("score: ");
-      printk(num);
-      
-    }
-    if(strcmp(input_us, "2") == 0)
-    {
-      printk("please enter first number: ");
-      a =(int)input_us;
-      printk(input_us);
-      printk("please enter second number: ");
-      b = (int)input_us;
-      printk(input_us);
-    }
+    printk("JAKOS Version: 0.0.2 ALFA \n");
+    printk("Autors: \n");
+    printk("Main programmist: a0w-svg \n");
+    printk("translator: Kobokue \n");
+    printk("testers: SaroshiPL and JakubLeonardo \n");
   }
   else
   {
@@ -82,3 +59,4 @@ void input(char *input_us)
   }
   printk("\nJakOS>");
 }
+

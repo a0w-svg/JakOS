@@ -1,7 +1,7 @@
 #include "./include/screen.h"
 #include "../common/include/port.h"
 #include "../libc/include/mem.h"
-
+#include "../libc/include/string.h"
 //private API
 int get_cur_offset();
 void set_cur_offset(int offset);
@@ -37,6 +37,7 @@ void printk(char *txt)
 {
     printk_at(txt, -1, -1);
 }
+
 void key_backspace()
 {
     int offset = get_cur_offset()-2;
@@ -94,7 +95,7 @@ int printk_char(char ch, int column, int row, char attrib)
         int i;
         for(i = 1; i < MAX_ROWS; i++)
         {
-            mem_cp((uint8_t*)(get_offset_mem(0, i) + VIDEO_ADDR),
+            memcpy((uint8_t*)(get_offset_mem(0, i) + VIDEO_ADDR),
                         (uint8_t*)(get_offset_mem(0, i-1) + VIDEO_ADDR),
                         MAX_COLS * 2);
         }
@@ -108,6 +109,78 @@ int printk_char(char ch, int column, int row, char attrib)
     set_cur_offset(offset);
     return offset;
 }
+void printk_hex(uint32_t n)
+{
+    int32_t tmp;
+
+    printk("0x");
+
+    char noZeroes = 1;
+
+    int i;
+    for (i = 28; i > 0; i -= 4)
+    {
+        tmp = (n >> i) & 0xF;
+        if (tmp == 0 && noZeroes != 0)
+        {
+            continue;
+        }
+    
+        if (tmp >= 0xA)
+        {
+            noZeroes = 0;
+            printk_char(tmp-0xA+'a', -1, -1,WHITE_ON_BLACK );
+        }
+        else
+        {
+            noZeroes = 0;
+            printk_char( tmp+'0', -1, -1, WHITE_ON_BLACK );
+        }
+    }
+  
+    tmp = n & 0xF;
+    if (tmp >= 0xA)
+    {
+        printk_char(tmp-0xA+'a', -1, -1, WHITE_ON_BLACK);
+    }
+    else
+    {
+        printk_char(tmp+'0', -1, -1, WHITE_ON_BLACK);
+    }
+
+}
+
+void printk_dec(uint32_t n)
+{
+
+    if (n == 0)
+    {
+        printk_char('0', -1, -1, WHITE_ON_BLACK);
+        return;
+    }
+
+    int32_t acc = n;
+    char c[32];
+    int i = 0;
+    while (acc > 0)
+    {
+        c[i] = '0' + acc%10;
+        acc /= 10;
+        i++;
+    }
+    c[i] = 0;
+
+    char c2[32];
+    c2[i--] = 0;
+    int j = 0;
+    while(i >= 0)
+    {
+        c2[i--] = c[j++];
+    }
+    printk(c2);
+
+}
+
 int get_cur_offset()
 {
     port_byte_out(REG_SCREEN_CTRL, 14);

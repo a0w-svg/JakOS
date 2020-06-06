@@ -17,6 +17,10 @@ void screen_clean();
 
 void printk_at(char *txt, int column, int row);
 void printk(char *txt);
+
+//print numbers
+void printk_hex(uint32_t n);
+void printk_dec(uint32_t n);
 void key_backspace();
 
 #endif

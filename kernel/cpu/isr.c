@@ -8,7 +8,7 @@
 #include "./include/idt.h"
 #include "../../drivers/include/screen.h"
 #include "../../common/include/types.h"
-#include "./include/timer_interrupts.h"
+#include "./include/pit.h"
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
 #include "../../drivers/include/keyboard.h"

@@ -1,7 +1,8 @@
 MBOOT_PAGE_ALIGN equ 1<<0
 MBOOT_MEM_INFO equ 1<<1
+MBOOT_AOUT_KLUDGE equ 1<<16
 MBOOT_HEADER_MAGIC equ  0x1BADB002 
-MBOOT_HEADER_FLAGS equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
+MBOOT_HEADER_FLAGS equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_AOUT_KLUDGE
 MBOOT_CHECKSUM equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
 bits 32
@@ -24,46 +25,43 @@ mboot:
 global boot
 extern kmain
 
-jmp load_gdt
-
-gdt:
-gdt_null:
-	dq 0
-gdt_code:
-	dw 0xFFFF
-	dw 0
-
-	db 0
-	db 10011010b
-	db 11001111b
-	db 0
-
-gdt_data:
-	dw 0xFFFF
-	dw 0
-
-	db 0
-	db 10010010b
-	db 11001111b
-	db 0
-gdt_end:
-
-gdt_desc:
-	dw gdt_end - gdt - 1
-	dd gdt
-
-load_gdt:
-	cli
-	lgdt[gdt_desc]
-	sti
-global idt_flush
-idt_flush:
-	mov eax, [esp + 4]
-	lidt [eax]
+global gdt_flush
+extern gp
+gdt_flush:
+	lgdt [gp]
+	mov ax, 0x10
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+	jmp 0x08:flush2
+flush2:
 	ret
 boot:
+	mov esp, sys_stack
 	push ebx
+	push eax
 	cli
 	call kmain
 	jmp $
 
+;extern pd
+;global paging_init
+;paging_init:
+;	mov eax, [pd]
+;	mov cr3, eax
+;	mov eax, cr0
+;	or eax, 0x80000001
+;	mov cr0, eax
+;	ret
+
+section .bss
+	align 16
+	resb 32768
+sys_stack:
+	resb 32768
+	align 4096
+	global heap
+heap:
+	resb 1<<23
