@@ -3,20 +3,30 @@
 uint8_t port_byte_in(uint16_t port)
 {
     uint8_t result;
-     asm volatile("in %%dx, %%al" : "=a" (result) : "d" (port));
+     asm volatile("inb %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 void port_byte_out(uint16_t port, uint8_t data)
 {
-    asm volatile("out %%al, %%dx" : : "a" (data), "d" (port));
+    asm volatile("outb %%al, %%dx" : : "a" (data), "d" (port));
 }
 uint16_t port_word_in(uint16_t port)
 {
     uint16_t result;
-    asm volatile("in %%dx, %%ax" : "=a" (result) : "d" (port));
+    asm volatile("inw %%dx, %%ax" : "=a" (result) : "d" (port));
     return result;
 }
 void port_word_out(uint16_t port, uint16_t data)
 {
-    asm volatile("out %%ax, %%dx" : : "a" (data), "d" (port));
+    asm volatile("outw %%ax, %%dx" : : "a" (data), "d" (port));
+}
+unsigned port_long_in(uint16_t  port)
+{
+    unsigned data;
+    asm volatile("inl %1, %0" : "=a" (data) : "d"(port));
+    return data;
+}
+void port_long_out(uint16_t port, unsigned data)
+{
+    asm volatile("outl %0, %1" : : "a"(data), "d"(port));
 }

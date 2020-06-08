@@ -12,19 +12,21 @@
 #include "../drivers/include/speaker.h"
 #include "./mm/include/kmalloc.h"
 #include "../drivers/ports/include/serial_port.h"
+#include "./mm/include/paging.h"
+#include "./time/include/cmos.h"
 #include <stddef.h>
 
-
+#define VM_KERNEL_BASE (0xffff808000000000ull)
 void kmain()
 {
+  heap_init();
+  init_paging();
   init_gdt();
   isr_init();
   irq_init();
-  heap_init();
   init_serial();
   screen_clean();
   beep();
-  
   printk("welcome \n");
   printk("Successfully booted JakOS\n");
   printk("Type HELP for a list of commands\n");
