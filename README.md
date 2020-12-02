@@ -28,4 +28,4 @@ Rose-lk kernel x86 and JakOS
 ## Contrib:
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](LICENSE.md)
