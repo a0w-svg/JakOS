@@ -10,9 +10,10 @@ int get_offset_mem(int column, int row);
 int get_offset_row(int offset);
 int get_offset_column(int offset);
 
+
 //public API
 
-void printk_at(char *txt, int column, int row)
+void printk_at(char *txt, int column, int row, uint8_t attirb)
 {
     int offset;
     if(column >= 0 && row >= 0)
@@ -28,14 +29,18 @@ void printk_at(char *txt, int column, int row)
     int i = 0;
     while(txt[i] != 0)
     {
-        offset = printk_char(txt[i++], column, row, WHITE_ON_BLACK);
+        offset = printk_char(txt[i++], column, row, attirb);
         row = get_offset_row(offset);
         column = get_offset_column(offset);
     }
 }
 void printk(char *txt)
 {
-    printk_at(txt, -1, -1);
+    printk_at(txt, -1, -1, WHITE_ON_BLACK);
+}
+void printk_color(char *txt, uint8_t color)
+{
+    printk_at(txt, -1, -1,  color);
 }
 
 void key_backspace()

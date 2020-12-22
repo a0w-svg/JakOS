@@ -12,11 +12,13 @@
 #define REG_SCREEN_CTRL 0x3D4
 #define REG_SCREEN_DATA 0x3D5
 
+
 //clean screen
 void screen_clean();
 
-void printk_at(char *txt, int column, int row);
+void printk_at(char *txt, int column, int row, uint8_t attirb);
 void printk(char *txt);
+void printk_color(char *txt, uint8_t color);
 
 //print numbers
 void printk_hex(uint32_t n);

@@ -45,7 +45,7 @@ boot:
 	push eax
 	cli
 	call kmain
-	jmp $
+	hlt
 
 ;extern pd
 ;global paging_init

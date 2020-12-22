@@ -1,7 +1,7 @@
 #Sources files compile
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/cpu/*.c  libc/*.c common/*.c kernel/mm/*.c drivers/ports/*.c kernel/time/*.c)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/cpu/*.c  libc/*.c common/*.c kernel/mm/*.c kernel/shell/*.c drivers/ports/*.c)
 #Headers files list
-HEADERS = $(wildcard kernel/include/*.h drivers/include/*.h kernel/cpu/include/*.h libc/include/*.h common/*.h boot/*.h kernel/mm/include/*.h drivers/ports/include/*.h kernel/time/include/*.h)
+HEADERS = $(wildcard kernel/include/*.h drivers/include/*.h kernel/cpu/include/*.h kernel/shell/include/*.h libc/include/*.h common/*.h boot/*.h kernel/mm/include/*.h drivers/ports/include/*.h )
 #compiled files .o
 OBJ = ${C_SOURCES:.c=.o kernel/cpu/interrupts.o} 
 #add macro to the cross compiler

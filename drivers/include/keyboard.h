@@ -4,4 +4,5 @@
 #include "../../kernel/cpu/include/isr.h"
 //define constans
 void init_keyboard();
+void input_key(char* a);
 #endif

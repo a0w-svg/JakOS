@@ -4,6 +4,7 @@
 #include "../libc/include/unused.h"
 #include "./include/screen.h"
 #include "../kernel/kmain.h"
+#include "../kernel/shell/include/shell.h"
 #define SC_MAX 57 
 static char buf[256];
 #define ENTER 0x1C
@@ -31,7 +32,7 @@ static void keyboard_callback(registers_t *regs)
     else if(scan_code == ENTER)
     {
         printk("\n");
-        input(buf);
+        shell(buf);
         buf[0] = '\0';
     }
     else if(scan_code == BACKSPACE)
@@ -53,4 +54,31 @@ static void keyboard_callback(registers_t *regs)
 void init_keyboard()
 {
     reg_interrupt_handler(IRQ1, keyboard_callback);
+}
+
+void input_key(char* a)
+{
+        uint8_t key = port_byte_in(0x60);
+        char letter_key = sc_ascii[(int)key];
+    if( key > SC_MAX)
+    {
+        return;
+    }
+    else if(key == ENTER)
+    {
+        printk("\n");
+        shell(buf);
+        buf[0] = '\0';
+    }
+    else if(key == BACKSPACE)
+    {
+        back_space(a);
+        key_backspace();
+    }
+    else
+    {
+    append(a, letter_key);
+    append(a, '\0');
+    printk(a);
+    }
 }
