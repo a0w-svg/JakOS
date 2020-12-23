@@ -47,6 +47,56 @@ enum KB_ENC_CMD{
     RESEND_LAST_RESULT = 0xFE,
     RESET_KB_TO_POWER_ON_STATE_AND_START_SELF_TEST = 0xFF
 };
+enum KBC_CMD{ // Onboard Keyboard Controller Commands
+    // Common Commands
+    READ_CMD_BYTE = 0x20, // Read command byte
+    WRITE_CMD_BYTE = 0x60, // Write command byte
+    SELF_TEST = 0xAA, // self test
+    INTERFACE_TEST = 0xAB, // interface test
+    DISABLE_KB = 0xAD, // disable keyboard
+    ENABLE_KBC_KB = 0xAE, // enable keyboard 
+    READ_INPUT_PORT = 0xC0, // read  input port
+    READ_OUTPUT_PORT = 0xD0,
+    WRITE_OUTPUT_PORT = 0xD1,
+    READ_TEST_INPUTS = 0xE0,
+    SYSTEM_RESET = 0xFE,
+    DISABLE_MOUSE_PORT = 0xA7,
+    ENABLE_MOUSE_PORT = 0xA8,
+    TEST_MOUSE_PORT = 0xA9,
+    WRITE_TO_MOUSE = 0xD4,
+    /* 
+    Non Standard Commands:
+            |
+    0x00-0x1F "Read controller RAM"
+    0x20-0x3F "Read controller RAM"
+    0x40-0x5F "Write controller RAM"
+    0x60-0x7F "Write controller RAM"
+    0x90-0x93 "Synaptics Multiplexer Prefix"
+    0x90-0x9F "Write port  13-Port 10"
+    */
+    READ_COPYRIGHT = 0xA0,
+    READ_FIRMWARE_VER = 0xA1,
+    CHANGE_SPEED = 0xA2,
+    CHANGE_SPEED2 = 0xA3,
+    CHECK_IF_PASSWORD_IS_INSTALLED = 0xA4,
+    LOAD_PASSWORD = 0xA5,
+    CHECK_PASSWORD = 0xA6,
+    DISAGNOSTIC_DUMP = 0xAC,
+    READ_KB_VERSION = 0xAF,
+    // 0xB0-0xB5 "Reset controller line"
+    // 0xB8-0xBD "Set controller line"
+    CONTINUOUS_IN_PORT_POLL_LOW = 0xC1,
+    CONTINUOUS_IN_PORT_POLL_HIGH = 0xC2,
+    UNBLOCK_CONTROLLER_LINES_P22_AND_P23 = 0xC8,
+    BLOCK_CONTROLLER_LINES_P22_AND_P23 = 0xC9,
+    READ_CONTROLLER_MODE = 0xCA,
+    WRITE_CONTROLLER_MODE = 0xCB,
+    WRITE_OUTPUT_BUFFER = 0xD2,
+    WRITE_MOUSE_OUTPUT_BUFFER = 0xD3,
+    DISABLE_A20_LINE = 0xDD,
+    ENABLE_A20_LINE = 0xDF,
+    // 0xF0-0xFF "Pulse output bit"
+};
 
 const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6", 
     "7", "8", "9", "0", "-", "=", "Backspace", "Tab", "Q", "W", "E", 
@@ -66,8 +116,13 @@ const char sc_ascii_small[] = { '?', '?', '1', '2', '3', '4', '5', '6',
         'h', 'j', 'k', 'l', ';', '\'', '`', '?', '\\', 'z', 'x', 'c', 'v', 
         'b', 'n', 'm', ',', '.', '/', '?', '?', '?', ' '};
 uint8_t shift = 0;
+// proto functions
 void send_command_to_kbc(uint8_t cmd);
 void send_command_to_enc_kb(uint8_t cmd);
+bool kb_self_test();
+void kb_disable();
+void kb_enable();
+
 static void keyboard_callback(registers_t *regs)
 {
     uint8_t scan_code = port_byte_in(0x60);
@@ -135,9 +190,32 @@ void send_command_to_enc_kb(uint8_t cmd)
     }
     port_byte_out(KB_ENC_CMD_REG, cmd);
 }
+bool kb_self_test()
+{
+    send_command_to_kbc(SELF_TEST);
+    while (1)
+    {
+        if((keyboard_read_status() & KBC_STATS_MASK_OUT_BUFFER))
+            break;
+    }
+    return (kb_enc_read_buf() == 0x55) ? true : false;
+}
+void kb_disable()
+{
+    send_command_to_kbc(DISABLE_KB);
+}
+void kb_enable()
+{
+    send_command_to_kbc(ENABLE_KBC_KB);
+}
 void init_keyboard()
 {
     
     reg_interrupt_handler(IRQ1, keyboard_callback);
 }
 
+void kbc_reset_system()
+{
+    send_command_to_kbc(WRITE_OUTPUT_PORT);
+    send_command_to_enc_kb(0xfe);
+}
