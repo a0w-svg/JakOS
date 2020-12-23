@@ -25,7 +25,7 @@ void shell(char* input_us)
     printk("MOVE - move file to indicated path - todo currently not working\n");
     printk("CREDITS - display OS version and autors\n");
     printk("XMAS - display christmas tree\n");
-    printk("CLEAN - clean screen\n");
+    printk("CLEAN -clean screen\n");
     printk("CALC - simple calculator - todo currently not working\n");
   }
   else if(strcmp(input_us, "CREDITS") == 0)
@@ -39,19 +39,22 @@ void shell(char* input_us)
   }
   else if(strcmp(input_us, "XMAS") == 0)
   {
-    printk("     *      \n");
+    printk_color("     *      \n", CYAN, BLACK);
     printk("    *&*     \n");
     printk("   *!*^*    \n");
     printk("  *!***!*   \n");
     printk(" **s******  \n");
-    printk("    (_)     \n");
-    printk("  The creators of JakOS wish you a Merry Christmas :)\n");
+    printk_color("    (_)     \n", BROWN, BLACK);
+    printk_color("  The creators of JakOS wish you a Merry Christmas :)\n", LIGHT_BLUE, BLACK);
   }
   else if(strcmp(input_us, "CLEAN") == 0)
   {
     screen_clean();
   }
-  
+  else if(strcmp(input_us, "SET") == 0)
+  {
+    set_control_led(1, 0, 0);
+  }
   else
   {
     printk("wrong command please enter currect command\n");

@@ -2,6 +2,7 @@
 #include "../common/include/port.h"
 #include "../libc/include/mem.h"
 #include "../libc/include/string.h"
+#include "./include/speaker.h"
 //private API
 int get_cur_offset();
 void set_cur_offset(int offset);
@@ -9,7 +10,7 @@ int printk_char(char ch, int column, int row, char attrib);
 int get_offset_mem(int column, int row);
 int get_offset_row(int offset);
 int get_offset_column(int offset);
-
+uint8_t entry_color(VGA_color fg, VGA_color bg);
 
 //public API
 
@@ -38,9 +39,15 @@ void printk(char *txt)
 {
     printk_at(txt, -1, -1, WHITE_ON_BLACK);
 }
-void printk_color(char *txt, uint8_t color)
+void printk_color(char *txt, VGA_color fg, VGA_color bg)
 {
-    printk_at(txt, -1, -1,  color);
+    uint8_t color = entry_color(fg, bg);
+    if(color == 0)
+        printk_at(txt, -1, -1, WHITE_ON_BLACK);
+    else
+    {
+        printk_at(txt, -1, -1,  color);
+    }
 }
 
 void key_backspace()
@@ -76,6 +83,18 @@ int printk_char(char ch, int column, int row, char attrib)
     else
     {
         offset = get_cur_offset();
+    }
+    if(ch == '\t')
+    {
+        row = get_offset_row(offset);
+        column = get_offset_column(offset);
+        offset = get_offset_mem(column+1, row);
+        ch = 0;
+    }
+    if(ch == '\a')
+    {
+        beep();
+        ch = 0;
     }
 
     if(ch == '\n')
@@ -228,3 +247,7 @@ int get_offset_column(int offset)
     return (offset - (get_offset_row(offset)*2*MAX_COLS)) / 2;
 }
 
+uint8_t entry_color(VGA_color fg, VGA_color bg)
+{
+    return fg | bg << 4;
+}

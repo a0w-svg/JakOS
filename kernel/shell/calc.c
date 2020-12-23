@@ -5,10 +5,4 @@
 
 void calc(uint8_t *buf)
 {
-    int a = kmalloc(sizeof(int));
-    int b = kmalloc(sizeof(int));
-
-    uint8_t key;
-    if(key == 6)
-        key = 0;
 }

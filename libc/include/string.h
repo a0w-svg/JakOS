@@ -9,6 +9,6 @@ int strlen(char c[]);
 void back_space(char c[]);
 void append(char c[], char num);
 int strcmp(char c[], char c2[]);
-
+void remove_from_string(char *s, char c);
 
 #endif

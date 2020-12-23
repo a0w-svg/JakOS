@@ -106,3 +106,19 @@ int strcmp(char c[], char c2[])
     return c[i] - c2[i];
 }
 
+void remove_from_string(char *s, char c)
+{
+    int writer = 0, reader = 0;
+
+    while (s[reader])
+    {
+        if (s[reader]!=c) 
+        {   
+            s[writer++] = s[reader];
+        }
+
+        reader++;       
+    }
+
+    s[writer]=0;
+}
