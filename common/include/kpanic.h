@@ -7,7 +7,7 @@
 #define PANIC(msg) kpanic(msg, __FILE__, __LINE__);
 #define ASSERT(b) ((b) ? (void)0 : kpanic_assert(__FILE__, __LINE__, #b))
 
-extern void kpanic(const char *, const char *file, uint32_t line);
-extern void kpanic_assert(const char *file, uint32_t line, const char *descript);
+void kpanic(const char * msg, const char *file, uint32_t line);
+void kpanic_assert(const char *file, uint32_t line, const char *descript);
 
 #endif

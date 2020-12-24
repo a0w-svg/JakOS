@@ -5,6 +5,7 @@
 #include "../../drivers/ports/include/serial_port.h"
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
+#include "../../common/include/kpanic.h"
 
 void shell(char* input_us)
 {
@@ -51,9 +52,9 @@ void shell(char* input_us)
   {
     screen_clean();
   }
-  else if(strcmp(input_us, "SET") == 0)
+  else if(strcmp(input_us, "TEST") == 0)
   {
-    set_control_led(1, 0, 0);
+    PANIC("Noob");
   }
   else
   {

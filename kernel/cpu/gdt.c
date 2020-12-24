@@ -3,6 +3,7 @@
 gdt_entry_t gdt[3];
 gdt_ptr_t gp;
 
+
 void set_gdt_gate(int num, unsigned long base, unsigned long limit,
      uint8_t access, uint8_t gran)
 {
