@@ -1,6 +1,6 @@
 #include "./include/kpanic.h"
 
-void kpanic(const char * msg, const char *file, uint32_t line)
+void kpanic(char * msg, char *file, uint32_t line)
 {
     printk_color(msg, RED, BLACK);
     printk("\n");
@@ -9,7 +9,7 @@ void kpanic(const char * msg, const char *file, uint32_t line)
     printk_dec(line);
     while(1);
 }
-void kpanic_assert(const char *file, uint32_t line, const char *descript)
+void kpanic_assert(char *file, uint32_t line, char *descript)
 {
     printk_color(file, RED, BLACK);
     printk("   ");

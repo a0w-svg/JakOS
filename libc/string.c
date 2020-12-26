@@ -122,3 +122,16 @@ void remove_from_string(char *s, char c)
 
     s[writer]=0;
 }
+
+char lower_case(char ch)
+{
+    if(ch >= 'A' && ch <= 'Z')
+        ch = ch + 'a' - 'A';
+    return ch;
+}
+char upper_case(char ch)
+{
+    if(ch >= 'a' && ch <= 'z')
+        ch = ch - 'a' + 'A';
+    return ch;
+}

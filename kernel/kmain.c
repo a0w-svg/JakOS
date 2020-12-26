@@ -18,15 +18,8 @@
 #include "../boot/multiboot.h"
 #include <stddef.h>
 
-typedef struct multiboot_memory_map {
-  uint32_t size;
-  uint32_t base_addr_low, base_addr_high;
-  uint32_t length_low, length_high;
-  uint32_t type;
-} multiboot_map_t;
 
-typedef multiboot_memory_map_t mmap_entry_t;
-int kmain(multiboot_info_t* mboot, uint32_t magic)
+void kmain()
 {
   heap_init();
   init_paging();
@@ -34,16 +27,7 @@ int kmain(multiboot_info_t* mboot, uint32_t magic)
   isr_init();
   irq_init();
   init_serial();
-  mmap_entry_t* entry = mboot->mmap_addr;
-  while(entry < (mboot->mmap_addr + mboot->mmap_length))
-  {
-    entry = (mmap_entry_t*) ((uint32_t) entry + 
-    entry->size + sizeof(entry->size));
-  }
   screen_clean();
-  //beep();
-  printk("memory size: ");
-  printk_hex(entry->len);
   printk("\n");
   printk("welcome \n");
   printk("Successfully booted JakOS\n");
