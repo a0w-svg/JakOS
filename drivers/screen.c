@@ -14,7 +14,7 @@ uint8_t entry_color(VGA_color fg, VGA_color bg);
 
 //public API
 
-void printk_at(char *txt, int column, int row, uint8_t attirb)
+void printk_at(const char *txt, int column, int row, uint8_t attirb)
 {
     int offset;
     if(column >= 0 && row >= 0)
@@ -35,7 +35,7 @@ void printk_at(char *txt, int column, int row, uint8_t attirb)
         column = get_offset_column(offset);
     }
 }
-void printk(char *txt)
+void printk(const char *txt)
 {
     printk_at(txt, -1, -1, WHITE_ON_BLACK);
 }
@@ -88,7 +88,7 @@ int printk_char(char ch, int column, int row, char attrib)
     {
         row = get_offset_row(offset);
         column = get_offset_column(offset);
-        offset = get_offset_mem(column+1, row);
+        offset = get_offset_mem(column+4, row);
         ch = 0;
     }
     if(ch == '\a')
@@ -119,8 +119,7 @@ int printk_char(char ch, int column, int row, char attrib)
         int i;
         for(i = 1; i < MAX_ROWS; i++)
         {
-            memcpy((uint8_t*)(get_offset_mem(0, i) + VIDEO_ADDR),
-                        (uint8_t*)(get_offset_mem(0, i-1) + VIDEO_ADDR),
+            memcpy((uint8_t*)(get_offset_mem(0, i) + VIDEO_ADDR),(uint8_t*)(get_offset_mem(0, i-1) + VIDEO_ADDR),
                         MAX_COLS * 2);
         }
         char *last_line = (char*) (get_offset_mem(0, MAX_ROWS-1) + (uint8_t*) VIDEO_ADDR);
@@ -172,6 +171,10 @@ void printk_hex(uint32_t n)
         printk_char(tmp+'0', -1, -1, WHITE_ON_BLACK);
     }
 
+}
+void printk_putchar(char data)
+{
+        printk_char(data, -1, -1, WHITE_ON_BLACK);
 }
 
 void printk_dec(uint32_t n)

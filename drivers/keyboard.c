@@ -105,17 +105,16 @@ const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6",
         "LShift", "\\", "Z", "X", "C", "V", "B", "N", "M", ",", ".", 
         "/", "RShift", "Keypad *", "LAlt", "Spacebar"};
 
-const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6',     
-    '7', '8', '9', '0', '-', '=', '?', '?', 'Q', 'W', 'E', 'R', 'T', 'Y', 
-        'U', 'I', 'O', 'P', '[', ']', '?', '?', 'A', 'S', 'D', 'F', 'G', 
-        'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V', 
-        'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
-const char sc_ascii_small[] = { '?', '?', '1', '2', '3', '4', '5', '6',     
-    '7', '8', '9', '0', '-', '=', '?', '?', 'q', 'w', 'e', 'r', 't', 'y', 
-        'u', 'i', 'o', 'p', '[', ']', '?', '?', 'a', 's', 'd', 'f', 'g', 
-        'h', 'j', 'k', 'l', ';', '\'', '`', '?', '\\', 'z', 'x', 'c', 'v', 
-        'b', 'n', 'm', ',', '.', '/', '?', '?', '?', ' '};
-uint8_t shift = 0;
+const char sc_ascii[] = { 0, 0, '1', '2', '3', '4', '5', '6',     
+    '7', '8', '9', '0', '-', '=', 0, 0, 'Q', 'W', 'E', 'R', 'T', 'Y', 
+        'U', 'I', 'O', 'P', '[', ']', 0, 0, 'A', 'S', 'D', 'F', 'G', 
+        'H', 'J', 'K', 'L', ';', '\'', '`', 0, '\\', 'Z', 'X', 'C', 'V', 
+        'B', 'N', 'M', ',', '.', '/', 0, 0, 0, ' '};
+const char sc_ascii_small[] = { 0, 0, '1', '2', '3', '4', '5', '6',     
+    '7', '8', '9', '0', '-', '=', 0, 0, 'q', 'w', 'e', 'r', 't', 'y', 
+        'u', 'i', 'o', 'p', '[', ']', 0, 0, 'a', 's', 'd', 'f', 'g', 
+        'h', 'j', 'k', 'l', ';', '\'', '`', 0, '\\', 'z', 'x', 'c', 'v', 
+        'b', 'n', 'm', ',', '.', '/', 0, 0, 0, ' '};
 // proto functions
 void send_command_to_kbc(uint8_t cmd);
 void send_command_to_enc_kb(uint8_t cmd);
@@ -125,6 +124,7 @@ void kb_enable();
 
 static void keyboard_callback(registers_t *regs)
 {
+    static int shift;
     uint8_t scan_code = port_byte_in(0x60);
     if(scan_code > SC_MAX)
     {
@@ -143,7 +143,6 @@ static void keyboard_callback(registers_t *regs)
     }
     else
     {
-
         char letter_key = sc_ascii[(int)scan_code];
  
         char str[2] = {letter_key, '\0'};
@@ -208,14 +207,18 @@ void kb_enable()
 {
     send_command_to_kbc(ENABLE_KBC_KB);
 }
-void init_keyboard()
-{
-    
-    reg_interrupt_handler(IRQ1, keyboard_callback);
-}
-
 void kbc_reset_system()
 {
     send_command_to_kbc(WRITE_OUTPUT_PORT);
     send_command_to_enc_kb(0xfe);
+}
+void set_type_scancode(uint8_t code_set)
+{
+    send_command_to_enc_kb(SET_ALT_SCANCODE_SET);
+    send_command_to_enc_kb(code_set);
+}
+void init_keyboard()
+{
+    //set_type_scancode(3);
+    reg_interrupt_handler(IRQ1, keyboard_callback);
 }

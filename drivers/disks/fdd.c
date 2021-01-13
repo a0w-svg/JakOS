@@ -1,6 +1,7 @@
 #include "./include/fdd.h"
 #include "../../kernel/cpu/include/dma.h"
 #include "../../common/include/kpanic.h"
+#include "../../common/include/port.h"
 #include <stdbool.h>
 
 enum FDD_REGISTERS
@@ -83,8 +84,11 @@ enum DOR_MASK
     DOR_MASK_DRIVE2_MOTOR = 64,
     DOR_MASK_DRIVE3_MOTOR = 128
 };
-
-const uint8_t FDC_DMA_CHANNEL  = 2;
+#define FDD_SECTORS_PER_TRACK = 18
+#define  FDC_DMA_CHANNEL  2
+#define  DMA_BUF  0x1000
+static  uint8_t _current_drive = 0;
+static volatile uint8_t _FDD_IRQ = 0;
 bool fdd_initialize_dma(uint8_t* buf, unsigned length)
 {
     union 
@@ -92,7 +96,8 @@ bool fdd_initialize_dma(uint8_t* buf, unsigned length)
         uint8_t byte[4];
         uint64_t len;
     }a, b;
-    
+    a.len = (unsigned)buf;
+    b.len = (unsigned)length;
     if((a.len >> 24) || (b.len >> 16) || (((a.len & 0xFFFF) + b.len) >> 16))
     {
         return false;
@@ -108,5 +113,55 @@ bool fdd_initialize_dma(uint8_t* buf, unsigned length)
     dma_unmask_all_channels();
     return true;
 }
-void fdd_dma_read();
+
+uint8_t fdc_read_status()
+{
+    return port_byte_in(MAIN_STATUS_REG);
+}
+void fdd_write_dor(uint8_t value)
+{
+    port_byte_out(DIGITAL_OUTPUT_REG, value);
+}
+
+void fdc_send_cmd(uint8_t cmd)
+{
+    for(int i = 0; i < 500; i++)
+    {
+        if(fdc_read_status() && MSR_MASK_DATA_REG)
+        {
+            return port_byte_out(DATA_FIFO, cmd);
+        }
+    }
+}
+
+uint8_t fdc_read_data()
+{
+    for(int i = 0; i < 500; i++)
+    {
+        if(fdc_read_status() && MSR_MASK_DATA_REG)
+            return port_byte_in(DATA_FIFO);
+    }
+    return 0;
+}
+
+void fdc_write_ccr(uint8_t value)
+{
+    port_byte_out(CONF_CONTROL_REG, value);
+}
+
+inline void fdc_wait_irq()
+{
+    while (_FDD_IRQ == 0) {};
+    _FDD_IRQ = 0;
+}
+
+void fdd_irq_handler()
+{
+    asm("add esp, 12");
+    asm("pushad");
+}
+void fdd_dma_read()
+{
+}
+
 void fdd_write();

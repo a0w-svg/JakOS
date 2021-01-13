@@ -68,7 +68,7 @@ void reverse(char s[])
     }
 }
 // K&R
-int strlen(char c[])
+int strlen(const char c[])
 {
     int i = 0;
     while(c[i] != '\0')

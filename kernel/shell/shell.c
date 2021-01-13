@@ -6,6 +6,8 @@
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
 #include "../../common/include/kpanic.h"
+#include "../../libc/include/mem.h"
+#include "../../libc/include/stdio.h"
 
 void shell(char* input_us)
 {
@@ -54,7 +56,11 @@ void shell(char* input_us)
   }
   else if(strcmp(input_us, "TEST") == 0)
   {
-    PANIC("Noob");
+    
+  }
+  else if(strcmp(input_us, "TEST") == 0)
+  {
+    printf("%s window\n");
   }
   else
   {

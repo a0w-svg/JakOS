@@ -22,7 +22,7 @@
 void kmain()
 {
   heap_init();
-  init_paging();
+  //init_paging();
   init_gdt();
   isr_init();
   irq_init();

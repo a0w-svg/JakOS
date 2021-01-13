@@ -2,6 +2,7 @@
 #define SCREEN_H
 
 #include "../../common/include/types.h"
+#include <stddef.h>
 
 #define VIDEO_ADDR 0xb8000
 #define MAX_ROWS 25
@@ -33,10 +34,11 @@ typedef enum {
 //clean screen
 void screen_clean();
 
-void printk_at(char *txt, int column, int row, uint8_t attirb);
-void printk(char *txt);
+void printk_at(const char *txt, int column, int row, uint8_t attirb);
+void printk(const char *txt);
 void printk_color(char *txt, VGA_color fg, VGA_color bg);
 //print numbers
+void printk_putchar(char data);
 void printk_hex(uint32_t n);
 void printk_dec(uint32_t n);
 void key_backspace();

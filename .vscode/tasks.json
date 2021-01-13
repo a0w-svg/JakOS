@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+    "label": "Launch QEMU",
+    "type": "shell",
+    "linux": {
+        "command": "qemu-system-i386 -S -gdb tcp::1234 -boot d -cdrom JakOS.iso -m 512 &"
+    }
+}]
+}
