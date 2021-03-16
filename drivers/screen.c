@@ -3,6 +3,7 @@
 #include "../libc/include/mem.h"
 #include "../libc/include/string.h"
 #include "./include/speaker.h"
+#include "../../common/include/types.h"
 //private API
 #define VIDEO_ADDR 0xB8000
 #define MAX_ROWS 25
@@ -130,82 +131,13 @@ int printk_char(char ch, int column, int row, char attrib)
     set_cur_offset(offset);
     return offset;
 }
-void printk_hex(uint32_t n)
-{
-    int32_t tmp;
 
-    printk("0x");
-
-    char noZeroes = 1;
-
-    int i;
-    for (i = 28; i > 0; i -= 4)
-    {
-        tmp = (n >> i) & 0xF;
-        if (tmp == 0 && noZeroes != 0)
-        {
-            continue;
-        }
-    
-        if (tmp >= 0xA)
-        {
-            noZeroes = 0;
-            printk_char(tmp-0xA+'a', -1, -1,WHITE_ON_BLACK );
-        }
-        else
-        {
-            noZeroes = 0;
-            printk_char( tmp+'0', -1, -1, WHITE_ON_BLACK );
-        }
-    }
-  
-    tmp = n & 0xF;
-    if (tmp >= 0xA)
-    {
-        printk_char(tmp-0xA+'a', -1, -1, WHITE_ON_BLACK);
-    }
-    else
-    {
-        printk_char(tmp+'0', -1, -1, WHITE_ON_BLACK);
-    }
-
-}
 int printk_putchar(char data, uint8_t Color)
 {
         printk_char(data, -1, -1, Color);
         return -1;
 }
 
-void printk_dec(uint32_t n)
-{
-
-    if (n == 0)
-    {
-        printk_char('0', -1, -1, WHITE_ON_BLACK);
-        return;
-    }
-
-    int32_t acc = n;
-    char c[32];
-    int i = 0;
-    while (acc > 0)
-    {
-        c[i] = '0' + acc%10;
-        acc /= 10;
-        i++;
-    }
-    c[i] = 0;
-
-    char c2[32];
-    c2[i--] = 0;
-    int j = 0;
-    while(i >= 0)
-    {
-        c2[i--] = c[j++];
-    }
-    printk(c2);
-
-}
 
 int get_cur_offset()
 {

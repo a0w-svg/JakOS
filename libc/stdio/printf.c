@@ -18,8 +18,10 @@ int printf(const char* restrict format, ...) {
 	va_list parameters;
 	va_start(parameters, format);
 	uint8_t color;
+	int c;
+	char buf[20];
 	int written = 0;
-	while (*format != '\0') {
+	while ((c = *format) != '\0') {
 		size_t maxrem = INT_MAX - written;
 
 		if (format[0] != '%' || format[1] == '%') {
@@ -40,7 +42,7 @@ int printf(const char* restrict format, ...) {
 
 		const char* format_begun_at = format++;
 		
-		if (*format == 'c') {
+		if (c == 'c') {
 			format++;
 			char ch = (char) va_arg(parameters, int);
 			if (!maxrem)
@@ -65,15 +67,28 @@ int printf(const char* restrict format, ...) {
 		{
 			format++;
 			int a = va_arg(parameters, int);
-			printk_hex(a);
-			written++;
+			if(!maxrem)
+				// TODO: Set errno to EOVERFLOW
+				return -1;
+			int_to_ascii(buf, 'x', a);
+			print("0x", 2, color);
+			size_t len = strlen(buf);
+			if(!print(buf, len, color))
+				return -1;
+			written =+ len+2;
 		}
 		else if(*format == 'd')
 		{
 			format++;
 			int a = va_arg(parameters, int);
-			printk_dec(a);
-			written++;
+			if(!maxrem)
+				// TODO: Set errno to EOVERFLOW
+				return -1;
+			int_to_ascii(buf, 'd', a);
+			size_t len = strlen(buf);
+			if(!print(buf, len, color))
+				return -1;
+			written =+ len;
 		}
 		else if(*format == 'z')
 		{

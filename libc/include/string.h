@@ -1,7 +1,7 @@
 #ifndef STRING_H
 #define STRING_H
 
-void int_to_ascii(int num, char str[]);
+void int_to_ascii(char* buffer, int base, int d);
 void hex_to_ascii(int num, char str[]);
 void hex_to_dec(int num);
 void reverse(char s[]);

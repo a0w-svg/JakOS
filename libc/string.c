@@ -2,23 +2,36 @@
 #include <stdint.h>
 // K&R implementation
 
-void int_to_ascii(int num, char str[])
+void int_to_ascii(char* buffer, int base, int d)
 {
-  int i, sign;
-  if((sign = num) < 0) 
-  {
-      num = -num;
-  }
-    i = 0;
-      do{
-          str[i++] = num %  10 + '0';
-      } while ((num /= 10) > 0);
-      if(sign < 0)
-      {
-          str[i++] = '-';
-          str[i] = '\0';
-      }
-    reverse(str);
+    char* p = buffer;
+    char* p1, *p2;
+    unsigned long unsignedSrc = d;
+    int divisor = 10;
+    if(base == 'd' && d < 0)
+    {
+        *p++ = '-';
+        buffer++;
+        unsignedSrc = -d;
+    }
+    else if(base == 'x')
+        divisor = 16;
+    do{
+        int remainer = unsignedSrc % divisor;
+        *p++ = (remainer < 10) ? remainer + '0' : remainer + 'a' - 10;
+    }while(unsignedSrc /= divisor);
+    *p = 0;
+    p1 = buffer;
+    p2 = p - 1;
+    while(p1 < p2)
+    {
+        char tmp = *p1;
+        *p1 = *p2;
+        *p2 = tmp;
+        p1++;
+        p2--;
+    }
+
 }
 
 void hex_to_ascii(int num, char str[])

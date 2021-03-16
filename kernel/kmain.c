@@ -19,17 +19,27 @@
 #include "../boot/multiboot.h"
 #include <stddef.h>
 
-
-void kmain()
-{
+#define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
+void kmain(unsigned long magic, unsigned long addr)
+{ 
+  multiboot_info_t* mbi;
   screen_clean();
+  if(magic != MULTIBOOT_BOOTLOADER_MAGIC)
+  {
+    printf("Invalid magic number %x\n", (unsigned)magic);
+  }
+  mbi = (multiboot_info_t*)addr;
+  printf("flags = %x\n", (unsigned)mbi->flags);
+  if(CHECK_FLAG(mbi->flags, 0))
+  {
+    printf("mem_lower");
+  }
   heap_init();
   init_paging();
   init_gdt();
   isr_init();
   irq_init();
   init_serial();
-  
   printk("\n");
   printk("welcome \n");
   printk("Successfully booted JakOS\n");
