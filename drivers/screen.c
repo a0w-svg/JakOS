@@ -3,7 +3,7 @@
 #include "../libc/include/mem.h"
 #include "../libc/include/string.h"
 #include "./include/speaker.h"
-#include "../../common/include/types.h"
+#include "../common/include/types.h"
 //private API
 #define VIDEO_ADDR 0xB8000
 #define MAX_ROWS 25

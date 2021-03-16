@@ -2,6 +2,7 @@
 #define SCREEN_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 //use this if you want clean a screen
 void screen_clean();

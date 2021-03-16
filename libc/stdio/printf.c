@@ -4,6 +4,7 @@
 #include "../include/stdio.h"
 #include "../include/string.h"
 #include "../../drivers/include/screen.h"
+#include <stdint.h>
 #include <stddef.h>
 
 static bool print(const char* data, size_t length, uint8_t Color) {
