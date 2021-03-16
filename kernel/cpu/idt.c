@@ -12,11 +12,11 @@ idt_register_t idt_regs;
 
 void idt_set_gate(int n, uint32_t handler)
 {
-    idt[n].low_offs = low_16(handler);
+    idt[n].low_offs = LOW_16(handler);
     idt[n].selector = KERNEL_CS;
     idt[n].always0 = 0;
     idt[n].flags = 0x8E;
-    idt[n].high_offs = high_16(handler);
+    idt[n].high_offs = HIGH_16(handler);
 }
 
 void idt_init()

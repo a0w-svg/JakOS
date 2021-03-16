@@ -1,7 +1,7 @@
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +               JakOS Project                             +
-+   useful resources:                                     +
-+   https://wiki.osdev.org/Programmable_Interval_Timer    +
++                                                         +
++                                                         +
 +    Module: Programmable Interval Timer                  +
 +                                                         +
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/

@@ -12,6 +12,7 @@
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
 #include "../../drivers/include/keyboard.h"
+#include "../../libc/include/stdio.h"
 //interrupts handlers
 isr_t interrupt_handler[256];
 //interrupts code messages
@@ -121,13 +122,7 @@ void isr_init()
 }
 //detect and display type intterrupt
 void isr_handler(registers_t *r) {
-    printk("received interrupt: ");
-    char s[3];
-    int_to_ascii(r->int_no, s);
-    printk(s);
-    printk("\n");
-    printk(exception_messages[r->int_no]);
-    printk("\n");
+    printf("received interrupt: %x\n %s\n", r->int_no, exception_messages[r->int_no]);
 }
 //register interrupt handler func
 void reg_interrupt_handler(uint8_t n, isr_t handler)

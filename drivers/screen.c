@@ -4,13 +4,21 @@
 #include "../libc/include/string.h"
 #include "./include/speaker.h"
 //private API
+#define VIDEO_ADDR 0xB8000
+#define MAX_ROWS 25
+#define MAX_COLS 80
+//color define
+//screen device I/O ports
+#define REG_SCREEN_CTRL 0x3D4
+#define REG_SCREEN_DATA 0x3D5
+
+void printk_at(const char *txt, int column, int row, uint8_t attirb);
 int get_cur_offset();
 void set_cur_offset(int offset);
 int printk_char(char ch, int column, int row, char attrib);
 int get_offset_mem(int column, int row);
 int get_offset_row(int offset);
 int get_offset_column(int offset);
-uint8_t entry_color(VGA_color fg, VGA_color bg);
 
 //public API
 
@@ -35,19 +43,9 @@ void printk_at(const char *txt, int column, int row, uint8_t attirb)
         column = get_offset_column(offset);
     }
 }
-void printk(const char *txt)
+void printk_c(const char *Txt, uint8_t Color)
 {
-    printk_at(txt, -1, -1, WHITE_ON_BLACK);
-}
-void printk_color(char *txt, VGA_color fg, VGA_color bg)
-{
-    uint8_t color = entry_color(fg, bg);
-    if(color == 0)
-        printk_at(txt, -1, -1, WHITE_ON_BLACK);
-    else
-    {
-        printk_at(txt, -1, -1,  color);
-    }
+    printk_at(Txt, -1, -1, Color);
 }
 
 void key_backspace()
@@ -172,9 +170,10 @@ void printk_hex(uint32_t n)
     }
 
 }
-void printk_putchar(char data)
+int printk_putchar(char data, uint8_t Color)
 {
-        printk_char(data, -1, -1, WHITE_ON_BLACK);
+        printk_char(data, -1, -1, Color);
+        return -1;
 }
 
 void printk_dec(uint32_t n)
@@ -248,9 +247,4 @@ int get_offset_row(int offset)
 int get_offset_column(int offset)
 {
     return (offset - (get_offset_row(offset)*2*MAX_COLS)) / 2;
-}
-
-uint8_t entry_color(VGA_color fg, VGA_color bg)
-{
-    return fg | bg << 4;
 }

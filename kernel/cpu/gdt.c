@@ -1,6 +1,21 @@
 #include "./include/gdt.h"
+typedef struct 
+{
+    uint16_t limit_low;
+    uint16_t base_low;
+    uint8_t base_middle;
+    uint8_t access;
+    uint8_t granularity;
+    uint8_t base_high;
+}__attribute((packed)) gdt_entry_t;
 
-gdt_entry_t gdt[3];
+typedef struct 
+{
+    uint16_t limit;
+    gdt_entry_t *base;
+}__attribute__((packed)) gdt_ptr_t;
+
+gdt_entry_t gdt[5];
 gdt_ptr_t gp;
 
 
@@ -28,5 +43,9 @@ void init_gdt()
     set_gdt_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     //Data segment
     set_gdt_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+    // user mode code segment
+    set_gdt_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
+    // user mode data segment
+    set_gdt_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
     gdt_flush();
 }

@@ -15,24 +15,25 @@
 #include "./mm/include/paging.h"
 #include "./time/include/cmos.h"
 #include "./shell/include/shell.h"
+#include "../libc/include/stdio.h"
 #include "../boot/multiboot.h"
 #include <stddef.h>
 
 
 void kmain()
 {
+  screen_clean();
   heap_init();
-  //init_paging();
+  init_paging();
   init_gdt();
   isr_init();
   irq_init();
   init_serial();
-  screen_clean();
+  
   printk("\n");
   printk("welcome \n");
   printk("Successfully booted JakOS\n");
   printk("Type HELP for a list of commands\n");
-
   printk("JakOS>");
   while(1);
 }

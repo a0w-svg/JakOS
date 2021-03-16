@@ -1,5 +1,6 @@
 #include "./include/speaker.h"
 #include "../kernel/cpu/include/pit.h"
+#include "../common/include/port.h"
 void play_sound(uint32_t num_frequence)
 {
     uint32_t Division;

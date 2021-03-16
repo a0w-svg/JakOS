@@ -1,7 +1,7 @@
 #Sources files compile
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/cpu/*.c  libc/*.c common/*.c kernel/mm/*.c kernel/shell/*.c drivers/ports/*.c libc/stdio/*.c)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/cpu/*.c  libc/*.c common/*.c kernel/mm/*.c kernel/shell/*.c drivers/ports/*.c libc/stdio/*.c drivers/disks/*.c)
 #Headers files list
-HEADERS = $(wildcard kernel/include/*.h drivers/include/*.h kernel/cpu/include/*.h kernel/shell/include/*.h libc/include/*.h common/*.h boot/*.h kernel/mm/include/*.h drivers/ports/include/*.h )
+HEADERS = $(wildcard kernel/include/*.h drivers/include/*.h kernel/cpu/include/*.h kernel/shell/include/*.h libc/include/*.h common/*.h boot/*.h kernel/mm/include/*.h drivers/ports/include/*.h drivers/disks/include/*.h)
 #compiled files .o
 OBJ = ${C_SOURCES:.c=.o kernel/cpu/interrupts.o} 
 #add macro to the cross compiler
@@ -21,11 +21,11 @@ kernel.elf: boot/boot.o ${OBJ}
 
 #run compiled image
 run: kernel.bin
-	qemu-system-i386 -kernel kernel.bin -soundhw pcspk -serial file:CON
+	qemu-system-i386 -kernel kernel.bin -soundhw pcspk -serial file:CON -hda diskimage.dd
 
 #debug compiled image
 run-iso: 
-		qemu-system-i386 -cdrom JakOS.iso -soundhw pcspk -serial file:CON
+		qemu-system-i386 -cdrom JakOS.iso -soundhw pcspk -serial file:CON -hda diskimage.dd
 build-iso: kernel.bin menu.lst
 	mkdir -p iso/boot/grub              # create the folder structure
 	cp stage2_eltorito iso/boot/grub/   # copy the bootloader

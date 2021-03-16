@@ -20,13 +20,13 @@ void port_word_out(uint16_t port, uint16_t data)
 {
     asm volatile("outw %%ax, %%dx" : : "a" (data), "d" (port));
 }
-unsigned port_long_in(uint16_t  port)
+uint32_t port_long_in(uint16_t  port)
 {
     unsigned data;
     asm volatile("inl %1, %0" : "=a" (data) : "d"(port));
     return data;
 }
-void port_long_out(uint16_t port, unsigned data)
+void port_long_out(uint16_t port, uint32_t data)
 {
     asm volatile("outl %0, %1" : : "a"(data), "d"(port));
 }

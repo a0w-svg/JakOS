@@ -1,9 +1,7 @@
 #include "../include/stdio.h"
 #include "../../drivers/include/screen.h"
 
-int putchar(int n)
+int putchar(char n, uint8_t Color)
 {
-    char na = (char)n;
-    printk_putchar(na);
-    return n;
+    return printk_putchar(n, Color);
 }

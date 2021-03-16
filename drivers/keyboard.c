@@ -1,7 +1,7 @@
 #include "./include/keyboard.h"
 #include "../common/include/port.h"
 #include "../libc/include/string.h"
-#include "../libc/include/unused.h"
+#include "../common/include/types.h"
 #include "./include/screen.h"
 #include "../kernel/kmain.h"
 #include "../kernel/shell/include/shell.h"
@@ -9,6 +9,8 @@
 static char buf[256];
 #define ENTER 0x1C
 #define BACKSPACE 0x0E
+#define SHIFT_PRESS 0x2A
+#define SHIFT_RELEASE 0xAA
 // KBC constans
 enum KB_ENCODER_IO {
     KB_ENC_INPUT_BUFFER = 0x60,
@@ -124,7 +126,6 @@ void kb_enable();
 
 static void keyboard_callback(registers_t *regs)
 {
-    static int shift;
     uint8_t scan_code = port_byte_in(0x60);
     if(scan_code > SC_MAX)
     {
@@ -143,11 +144,11 @@ static void keyboard_callback(registers_t *regs)
     }
     else
     {
-        char letter_key = sc_ascii[(int)scan_code];
+            char letter_key = sc_ascii[(int)scan_code];
  
-        char str[2] = {letter_key, '\0'};
-        append(buf, letter_key);
-        printk(str);
+            char str[2] = {letter_key, '\0'};
+            append(buf, letter_key);
+            printk(str);
     }
     UNUSED(regs);
 }
@@ -219,6 +220,5 @@ void set_type_scancode(uint8_t code_set)
 }
 void init_keyboard()
 {
-    //set_type_scancode(3);
     reg_interrupt_handler(IRQ1, keyboard_callback);
 }

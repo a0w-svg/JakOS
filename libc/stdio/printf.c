@@ -3,12 +3,13 @@
 #include <stdarg.h>
 #include "../include/stdio.h"
 #include "../include/string.h"
+#include "../../drivers/include/screen.h"
 #include <stddef.h>
 
-static bool print(const char* data, size_t length) {
+static bool print(const char* data, size_t length, uint8_t Color) {
 	const unsigned char* bytes = (const unsigned char*) data;
 	for (size_t i = 0; i < length; i++)
-		if (putchar(bytes[i]) == 0)
+		if (putchar(bytes[i], Color) == 0)
 			return false;
 	return true;
 }
@@ -16,9 +17,8 @@ static bool print(const char* data, size_t length) {
 int printf(const char* restrict format, ...) {
 	va_list parameters;
 	va_start(parameters, format);
-
+	uint8_t color;
 	int written = 0;
-
 	while (*format != '\0') {
 		size_t maxrem = INT_MAX - written;
 
@@ -28,11 +28,10 @@ int printf(const char* restrict format, ...) {
 			size_t amount = 1;
 			while (format[amount] && format[amount] != '%')
 				amount++;
-			if (maxrem < amount) {
+			if (maxrem < amount)
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
-			}
-			if (!print(format, amount))
+			if (!print(format, amount, color))
 				return -1;
 			format += amount;
 			written += amount;
@@ -40,36 +39,54 @@ int printf(const char* restrict format, ...) {
 		}
 
 		const char* format_begun_at = format++;
-
+		
 		if (*format == 'c') {
 			format++;
-			char c = (char) va_arg(parameters, int /* char promotes to int */);
-			if (!maxrem) {
+			char ch = (char) va_arg(parameters, int);
+			if (!maxrem)
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
-			}
-			if (!print(&c, sizeof(c)))
+			if (!print(&ch, sizeof(ch), color))
 				return -1;
 			written++;
-		} else if (*format == 's') {
+		} 
+		else if (*format == 's') {
 			format++;
 			const char* str = va_arg(parameters, const char*);
 			size_t len = strlen(str);
-			if (maxrem < len) {
+			if (maxrem < len)
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
-			}
-			if (!print(str, len))
+			if (!print(str, len, color))
 				return -1;
 			written += len;
-		} else {
+		} 
+		else if(*format == 'x')
+		{
+			format++;
+			int a = va_arg(parameters, int);
+			printk_hex(a);
+			written++;
+		}
+		else if(*format == 'd')
+		{
+			format++;
+			int a = va_arg(parameters, int);
+			printk_dec(a);
+			written++;
+		}
+		else if(*format == 'z')
+		{
+			format++;
+			color = va_arg(parameters, int);
+		}
+		else {
 			format = format_begun_at;
 			size_t len = strlen(format);
-			if (maxrem < len) {
+			if (maxrem < len)
 				// TODO: Set errno to EOVERFLOW.
 				return -1;
-			}
-			if (!print(format, len))
+			if (!print(format, len, color))
 				return -1;
 			written += len;
 			format += len;
