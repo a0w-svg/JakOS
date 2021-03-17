@@ -24,6 +24,7 @@ void kmain(unsigned long magic, unsigned long addr)
 { 
   multiboot_info_t* mbi;
   screen_clean();
+  printf("TEST configuration\n");
   if(magic != MULTIBOOT_BOOTLOADER_MAGIC)
   {
     printf("Invalid magic number %x\n", (unsigned)magic);
@@ -32,8 +33,17 @@ void kmain(unsigned long magic, unsigned long addr)
   printf("flags = %x\n", (unsigned)mbi->flags);
   if(CHECK_FLAG(mbi->flags, 0))
   {
-    printf("mem_lower");
+    printf("mem_lower: %dKB \nmem_upper: %dKB\n", mbi->mem_lower, (unsigned) mbi->mem_upper);
   }
+  if(CHECK_FLAG(mbi->flags, 1))
+  {
+    printf("Boot device: %x\n", (unsigned) mbi->boot_device);
+  }
+  if(CHECK_FLAG(mbi->flags, 2))
+  {
+    printf("kernel file: %s\n", (char*)mbi->cmdline);
+  }
+
   heap_init();
   init_paging();
   init_gdt();
@@ -41,7 +51,7 @@ void kmain(unsigned long magic, unsigned long addr)
   irq_init();
   init_serial();
   printk("\n");
-  printk("welcome \n");
+  printf("%b\n", 11);
   printk("Successfully booted JakOS\n");
   printk("Type HELP for a list of commands\n");
   printk("JakOS>");

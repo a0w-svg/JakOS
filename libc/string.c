@@ -1,13 +1,20 @@
 #include "./include/string.h"
 #include <stdint.h>
-// K&R implementation
 
+/****************************************
+convert int type to ascii
+int base atrributs:
+    d - decimal number
+    x - hexadecimal number
+int d - source int type
+char* buffer - destination product
+******************************************/
 void int_to_ascii(char* buffer, int base, int d)
 {
     char* p = buffer;
     char* p1, *p2;
     unsigned long unsignedSrc = d;
-    int divisor = 10;
+    int divisor = 10; // decimal
     if(base == 'd' && d < 0)
     {
         *p++ = '-';
@@ -15,7 +22,7 @@ void int_to_ascii(char* buffer, int base, int d)
         unsignedSrc = -d;
     }
     else if(base == 'x')
-        divisor = 16;
+        divisor = 16; // hexadecimal 
     do{
         int remainer = unsignedSrc % divisor;
         *p++ = (remainer < 10) ? remainer + '0' : remainer + 'a' - 10;
@@ -34,45 +41,15 @@ void int_to_ascii(char* buffer, int base, int d)
 
 }
 
-void hex_to_ascii(int num, char str[])
-{
-    append(str, '0');
-    append(str, 'x');
-    char zeros = 0;
-
-    int32_t temp;
-    int i;
-    for(i = 28; i > 0; i-= 4)
-    {
-        temp = (num >> i) & 0xF;
-        if(temp == 0 && zeros == 0)
-        {
-            continue;
-        }
-        zeros = 1;
-        if(temp > 0xA)
-        {
-            append(str, temp - 0xA + 'a');
-        }
-        else
-        {
-            append(str, temp + '0');
-        }
-    }
-    temp = num & 0xF;
-    if(temp >= 0xA)
-    {
-        append(str, temp - 0xA + 'a');
-    }
-    else
-    {
-        append(str, temp + '0');
-    }
-}
-// K&R
+/*******************************************
+ reverses a string
+    example:
+        before: Hello
+        after: olleH
+********************************************/
 void reverse(char s[])
 {
-    int c, i, j;
+    int c, i, j; // declare  variables
     for(i = 0, j = strlen(s)-1; i < j; i++, j--)
     {
         c = s[i];
@@ -100,7 +77,7 @@ void append(char c[], char num)
 
 void back_space(char c[])
 {
-    int len = strlen(c);
+    int len = strlen(c); // get the string length
     c[len-1] = '\0';
 }
 
@@ -144,6 +121,7 @@ char lower_case(char ch)
 }
 char upper_case(char ch)
 {
+    // if ch is greather than a or if is 
     if(ch >= 'a' && ch <= 'z')
         ch = ch - 'a' + 'A';
     return ch;
