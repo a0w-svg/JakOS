@@ -141,6 +141,14 @@ static void keyboard_callback(registers_t *regs)
         last_key = ' ';
         kbd_irq = 1;
     }
+    if(scan_code == SHIFT_PRESS)
+    {
+        return;
+    }
+    if(scan_code == SHIFT_RELEASE)
+    {
+        return;
+    }
     else if(scan_code == BACKSPACE)
     {
         back_space(temp);
