@@ -9,6 +9,7 @@
 #define SC_MAX 57 
 static char temp[256];
 size_t i = 0;
+static int write = -1;
 #define ENTER 0x1C
 #define BACKSPACE 0x0E
 #define SHIFT_PRESS 0x2A
@@ -138,14 +139,24 @@ static void keyboard_callback(registers_t *regs)
     if(scan_code == ENTER)
     {
         printk("\n");
-        last_key = ' ';
+        last_key = '\n';
         kbd_irq = 1;
+    }
+    else if(scan_code == SHIFT_PRESS)
+    {
+    }
+    else if(scan_code == SHIFT_RELEASE)
+    {
     }
     else if(scan_code == BACKSPACE)
     {
-        back_space(temp);
-        i--;
-        key_backspace();
+        if(write >= 0)
+        {
+            back_space(temp);
+            i--;
+            key_backspace();
+            write--;
+        }
     }
     else
     {
@@ -237,10 +248,11 @@ char get_char()
 char* get_string(size_t size)
 {
     temp[0] = '\0';
+    write = -1;
     for(i = 0; i < size - 1; i++)
     {
         append(temp, get_char());
-        if(temp[i] == ' ')
+        if(temp[i] == '\n')
         {
             temp[i] = '\0';
             return temp;
@@ -248,6 +260,7 @@ char* get_string(size_t size)
 
         else
         {
+            write++;
             char a[2] = {temp[i], '\0'};
             printk(a);
         }
