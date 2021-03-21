@@ -5,8 +5,10 @@
 #include "./include/screen.h"
 #include "../kernel/kmain.h"
 #include "../kernel/shell/include/shell.h"
+#include <stddef.h>
 #define SC_MAX 57 
-static char buf[256];
+static char temp[256];
+size_t i = 0;
 #define ENTER 0x1C
 #define BACKSPACE 0x0E
 #define SHIFT_PRESS 0x2A
@@ -123,32 +125,33 @@ void send_command_to_enc_kb(uint8_t cmd);
 bool kb_self_test();
 void kb_disable();
 void kb_enable();
-
+int kbd_irq = 0;
+char last_key = 0;
 static void keyboard_callback(registers_t *regs)
 {
     uint8_t scan_code = port_byte_in(0x60);
+    static int shift = 0;
     if(scan_code > SC_MAX)
     {
         return;
     }
-    else if(scan_code == ENTER)
+    if(scan_code == ENTER)
     {
         printk("\n");
-        shell(buf);
-        buf[0] = '\0';
+        last_key = ' ';
+        kbd_irq = 1;
     }
     else if(scan_code == BACKSPACE)
     {
-        back_space(buf);
+        back_space(temp);
+        i--;
         key_backspace();
     }
     else
     {
             char letter_key = sc_ascii[(int)scan_code];
- 
-            char str[2] = {letter_key, '\0'};
-            append(buf, letter_key);
-            printk(str);
+            last_key = letter_key;
+            kbd_irq = 1;
     }
     UNUSED(regs);
 }
@@ -218,7 +221,37 @@ void set_type_scancode(uint8_t code_set)
     send_command_to_enc_kb(SET_ALT_SCANCODE_SET);
     send_command_to_enc_kb(code_set);
 }
+
 void init_keyboard()
 {
-    reg_interrupt_handler(IRQ1, keyboard_callback);
+   reg_interrupt_handler(IRQ1, keyboard_callback);
+}
+
+char get_char()
+{
+    while(kbd_irq != 1);
+    kbd_irq = 0;
+    return last_key;
+}
+
+char* get_string(size_t size)
+{
+    temp[0] = '\0';
+    for(i = 0; i < size - 1; i++)
+    {
+        append(temp, get_char());
+        if(temp[i] == ' ')
+        {
+            temp[i] = '\0';
+            return temp;
+        }
+
+        else
+        {
+            char a[2] = {temp[i], '\0'};
+            printk(a);
+        }
+    }
+    temp[size] = '\0';
+    return temp;
 }

@@ -1,6 +1,6 @@
 #include "./include/serial_port.h"
 #include "../../common/include/port.h"
-
+#define SERIAL_PORT 0x3F8 // COM1
 void init_serial()
 {
    port_byte_out(SERIAL_PORT + 1, 0x00);
@@ -29,4 +29,14 @@ void write_serial(char a)
 {
     while(is_transmit_empty() == 0);
     port_byte_out(SERIAL_PORT, a);
+}
+
+void write_serial_string(const char* txt)
+{
+    int i = 0;
+    while(txt[i] != 0)
+    {
+        write_serial(txt[i]);
+        i++;
+    }
 }

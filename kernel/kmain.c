@@ -50,11 +50,14 @@ void kmain(unsigned long magic, unsigned long addr)
   isr_init();
   irq_init();
   init_serial();
-  printk("\n");
-  printf("%b\n", 11);
-  printk("Successfully booted JakOS\n");
-  printk("Type HELP for a list of commands\n");
-  printk("JakOS>");
+  printf("\nSuccessfully booted JakOS\n");
+  printf("Type HELP for a list of commands\n");
+  printf("JakOS>");
+  while(1)
+  {
+    char* input = get_string(254);
+    shell(input);
+  }
   while(1);
 }
 

@@ -95,7 +95,15 @@ int strcmp(char c[], char c2[])
     }
     return c[i] - c2[i];
 }
-
+char *strcpy(char *dest, const char *src)
+{
+   do
+   {
+      *dest++ = *src++;
+   } while (*src != 0);
+   
+    return dest;
+}
 void remove_from_string(char *s, char c)
 {
     int writer = 0, reader = 0;

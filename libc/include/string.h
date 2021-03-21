@@ -34,6 +34,7 @@ void append(char c[], char num);
     return 1.
 *****************************************************/
 int strcmp(char c[], char c2[]);
+char *strcpy(char *dest, const char *src);
 /*************************************************************
  * Removes the character from the string.
  * char *s - the string from which you want to remove a character

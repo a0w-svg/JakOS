@@ -20,7 +20,7 @@ int printf(const char* restrict format, ...) {
 	va_list parameters;
 	// creates the va_list with the total length stored in the format variable
 	va_start(parameters, format);
-	uint8_t color;
+	uint8_t color = 0;
 	// buffer used to convert numbers to strings.
 	char buf[20];
 	// The Variable written stored number of characters written out.
@@ -84,6 +84,7 @@ int printf(const char* restrict format, ...) {
 			if(!maxrem)
 				// TODO: Set errno to EOVERFLOW
 				return -1;
+			//convert
 			int_to_ascii(buf, 'x', a);
 			print("0x", 2, color);
 			size_t len = strlen(buf);
@@ -123,7 +124,6 @@ int printf(const char* restrict format, ...) {
 			format += len;
 		}
 	}
-
 	va_end(parameters);
 	return written;
 }

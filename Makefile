@@ -21,11 +21,12 @@ kernel.elf: boot/boot.o ${OBJ}
 
 #run compiled image
 run: kernel.bin
-	qemu-system-i386 -kernel kernel.bin -soundhw pcspk -serial file:CON -hda diskimage.dd
-
+	qemu-system-i386 -kernel kernel.bin -soundhw pcspk -serial stdio -hda diskimage.dd
+run-debug:
+	qemu-system-i386 -kernel kernel.bin -soundhw pcspk -serial stdio -hda diskimage.dd -d int
 #debug compiled image
 run-iso: 
-		qemu-system-i386 -cdrom JakOS.iso -soundhw pcspk -serial file:CON -hda diskimage.dd
+		qemu-system-i386 -cdrom JakOS.iso -soundhw pcspk -serial stdio -hda diskimage.dd
 build-iso: kernel.bin menu.lst
 	mkdir -p iso/boot/grub              # create the folder structure
 	cp stage2_eltorito iso/boot/grub/   # copy the bootloader

@@ -3,9 +3,8 @@
 
 #include <stdint.h>
 
-#define SERIAL_PORT 0x3F8 // COM1
-
 void init_serial();
 char read_serial();
 void write_serial(char a);
+void write_serial_string(const char* txt);
 #endif

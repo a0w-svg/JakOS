@@ -3,5 +3,5 @@
 
 #include "../../../common/include/types.h"
 
-void shell(char* buffer);
+void shell(char* input_us);
 #endif

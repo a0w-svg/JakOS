@@ -3,9 +3,9 @@
 #include "../../common/include/types.h"
 #include "../../kernel/cpu/include/isr.h"
 #include <stdbool.h>
-//define constans
+#include <stddef.h>
+//define constants
 void init_keyboard();
-void set_control_led(bool numlock, bool capslock, bool scroll);
-void set_type_scancode(uint8_t code_set);
-void kbc_reset_system();
+char get_char();
+char* get_string(size_t size);
 #endif
