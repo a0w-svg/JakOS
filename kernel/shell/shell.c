@@ -33,7 +33,7 @@ void shell(char* input_us)
       printf("TEST - experimental features\n");
       printf("EASTER - check it yourself - todo currently halfway working\n");
       printf("CLEAN -clean screen\n");
-      printf("CALC - simple calculator - todo currently not working\n");
+      printf("CALC - simple calculator\n");
     }
     else if(strcmp(input_us, "CREDITS") == 0)
     {
@@ -76,8 +76,9 @@ void shell(char* input_us)
     else if(strcmp(input_us, "HELLO") == 0)
     {
       printf("Podaj imie: ");
-      char* a = get_string(80);
-      printf("Witaj %s", a);
+      char name[80];
+      get_string(name, 80);
+      printf("Witaj %s", name);
     }
     else if(strcmp(input_us, "TEST") == 0)
     {

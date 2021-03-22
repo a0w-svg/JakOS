@@ -114,7 +114,7 @@ const char sc_ascii[] = { 0, 0, '1', '2', '3', '4', '5', '6',
     '7', '8', '9', '0', '-', '=', 0, 0, 'Q', 'W', 'E', 'R', 'T', 'Y', 
         'U', 'I', 'O', 'P', '[', ']', 0, 0, 'A', 'S', 'D', 'F', 'G', 
         'H', 'J', 'K', 'L', ';', '\'', '`', 0, '\\', 'Z', 'X', 'C', 'V', 
-        'B', 'N', 'M', ',', '.', '/', 0, 0, 0, ' '};
+        'B', 'N', 'M', ',', '.', '/', 0, 0, 0, ' ', 0};
 const char sc_ascii_small[] = { 0, 0, '1', '2', '3', '4', '5', '6',     
     '7', '8', '9', '0', '-', '=', 0, 0, 'q', 'w', 'e', 'r', 't', 'y', 
         'u', 'i', 'o', 'p', '[', ']', 0, 0, 'a', 's', 'd', 'f', 'g', 
@@ -156,9 +156,9 @@ static void keyboard_callback(registers_t *regs)
     {
         if(sc_ascii[(int)scan_code] != 0)
         {
-            char letter_key = sc_ascii[(int)scan_code];
-            last_key = letter_key;
-            kbd_irq = 1;
+                char letter_key = sc_ascii[(int)scan_code];
+                last_key = letter_key;
+                kbd_irq = 1;
         }
     }
     UNUSED(regs);
@@ -242,26 +242,36 @@ char get_char()
     return last_key;
 }
 
-char* get_string(size_t size)
+void get_string(char* buf, size_t size)
 {
     temp[0] = '\0';
     write = -1;
-    for(i = 0; i < size - 1; i++)
+    for(i = 0; i < size+1; i++)
     {
         append(temp, get_char());
         if(temp[i] == '\n')
         {
             temp[i] = '\0';
-            return temp;
+            break;
         }
 
         else
         {
+            if(i != size)
+            {
             write++;
             char a[2] = {temp[i], '\0'};
             printk(a);
+            }
+            else
+            {
+                printk("\n");
+            }
         }
     }
     temp[size] = '\0';
-    return temp;
+    for(size_t j = 0; j <= i; j++)
+    {
+        buf[j] = temp[j];
+    }
 }

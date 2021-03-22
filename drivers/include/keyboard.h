@@ -7,5 +7,5 @@
 //define constants
 void init_keyboard();
 char get_char();
-char* get_string(size_t size);
+void get_string(char* buf, size_t size);
 #endif

@@ -53,9 +53,11 @@ void kmain(unsigned long magic, unsigned long addr)
   printf("\nSuccessfully booted JakOS\n");
   printf("Type HELP for a list of commands\n");
   printf("JakOS>");
+  static char input[257];
   while(1)
   {
-    char* input = get_string(254);
+    input[0] = '\0';
+    get_string(input, 256);
     shell(input);
   }
   while(1);
