@@ -1,4 +1,5 @@
 #include "./include/shell.h"
+#include "./include/calc.h"
 #include "../../drivers/include/keyboard.h"
 #include "../../drivers/include/screen.h"
 #include "../../drivers/ports/include/serial_port.h"
@@ -67,6 +68,10 @@ void shell(char* input_us)
     else if(strcmp(input_us, "CLEAN") == 0)
     {
       screen_clean();
+    }
+    else if(strcmp(input_us, "CALC") == 0)
+    {
+      calc();
     }
     else if(strcmp(input_us, "HELLO") == 0)
     {

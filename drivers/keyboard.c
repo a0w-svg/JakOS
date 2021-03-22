@@ -119,7 +119,7 @@ const char sc_ascii_small[] = { 0, 0, '1', '2', '3', '4', '5', '6',
     '7', '8', '9', '0', '-', '=', 0, 0, 'q', 'w', 'e', 'r', 't', 'y', 
         'u', 'i', 'o', 'p', '[', ']', 0, 0, 'a', 's', 'd', 'f', 'g', 
         'h', 'j', 'k', 'l', ';', '\'', '`', 0, '\\', 'z', 'x', 'c', 'v', 
-        'b', 'n', 'm', ',', '.', '/', 0, 0, 0, ' '};
+        'b', 'n', 'm', ',', '.', '/', 0, 0, 0, ' ', 0};
 // proto functions
 void send_command_to_kbc(uint8_t cmd);
 void send_command_to_enc_kb(uint8_t cmd);
@@ -142,12 +142,6 @@ static void keyboard_callback(registers_t *regs)
         last_key = '\n';
         kbd_irq = 1;
     }
-    else if(scan_code == SHIFT_PRESS)
-    {
-    }
-    else if(scan_code == SHIFT_RELEASE)
-    {
-    }
     else if(scan_code == BACKSPACE)
     {
         if(write >= 0)
@@ -160,9 +154,12 @@ static void keyboard_callback(registers_t *regs)
     }
     else
     {
+        if(sc_ascii[(int)scan_code] != 0)
+        {
             char letter_key = sc_ascii[(int)scan_code];
             last_key = letter_key;
             kbd_irq = 1;
+        }
     }
     UNUSED(regs);
 }

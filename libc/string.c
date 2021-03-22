@@ -1,5 +1,6 @@
 #include "./include/string.h"
 #include <stdint.h>
+#include <limits.h>
 
 /****************************************
 convert int type to ascii
@@ -40,7 +41,35 @@ void int_to_ascii(char* buffer, int base, int d)
     }
 
 }
-
+int atoi(const char* str)
+{
+    int sign = 1, base = 0, i = 0;
+    // if a string contains whitespace, ignore it
+    while(str[i] == ' ')
+        i++;
+    // check the sign of number
+    if(str[i] == '-' || str[i] == '+')
+    {
+        sign = 1 - 2 * (str[i++] == '-');
+    }
+    // checking for valid input
+    while(str[i] >= '0' && str[i] <= '9')
+    {
+        // handing overflow test case
+        if((base > INT_MAX / 10) || (base == INT_MAX / 10 &&
+            str[i] - '0' > 7))
+        {
+            if(sign == 1)
+                return INT_MAX;
+            else
+            {
+                return INT_MIN;
+            }
+        }
+        base = 10 * base + (str[i++] - '0');
+    }
+    return base * sign;
+}
 /*******************************************
  reverses a string
     example:
