@@ -13,6 +13,7 @@
 #include "../../common/include/port.h"
 #include "../../drivers/include/keyboard.h"
 #include "../../libc/include/stdio.h"
+#include "./include/rtc.h"
 //interrupts handlers
 isr_t interrupt_handler[256];
 //interrupts code messages
@@ -150,6 +151,7 @@ void irq_handler(registers_t *r)
 void irq_init()
 {
     asm volatile("sti");
+    init_rtc();
     init_timer(50);
     init_keyboard();
 }

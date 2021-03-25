@@ -39,13 +39,22 @@ void calc()
                     printf("result: %d\n", a * b);
                 else if(*in == '/')
                 {
-                    if(a == 0 && b == 0)
+                    if(b == 0)
                         printf("result: 0\n");
                     else
+                    {
                         printf("result: %d\n", a / b);
+                    }
                 }
                 else if(*in == '\\')
-                    printf("result: %d\n", a % b);
+                {
+                    if(b == 0)
+                        printf("result: 0\n");
+                    else
+                    {
+                      printf("result: %d\n", a % b);
+                    }
+                }
             }
             else
             {

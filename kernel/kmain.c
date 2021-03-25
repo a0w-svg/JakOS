@@ -5,6 +5,7 @@
 #include "../common/include/types.h"
 #include "../drivers/include/keyboard.h"
 #include "./cpu/include/pit.h"
+#include "./cpu/include/rtc.h"
 #include "kmain.h"
 #include "../libc/include/mem.h"
 #include "../libc/include/string.h"

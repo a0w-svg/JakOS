@@ -5,14 +5,17 @@
 #include "../../drivers/ports/include/serial_port.h"
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
-#include "../../common/include/kpanic.h"
 #include "../../libc/include/mem.h"
 #include "../../libc/include/stdio.h"
 #include "../../drivers/disks/include/ata.h"
+#include "../../libc/include/math.h"
+#include "../cpu/include/rtc.h"
+#include "../mm/include/kmalloc.h"
 
 void shell(char* input_us)
 {
-
+    time_t *time = kmalloc(sizeof(time_t));
+    get_time(time);
     if(strcmp(input_us, "SHUTDOWN") == 0)
     {
       printf("goodbye :(\n");
@@ -34,6 +37,9 @@ void shell(char* input_us)
       printf("EASTER - check it yourself - todo currently halfway working\n");
       printf("CLEAN -clean screen\n");
       printf("CALC - simple calculator\n");
+      printf("DATE - this command displays the date\n");
+      printf("TIME - this command displays the time\n");
+      printf("RANDOM - this command displays a random number\n");
     }
     else if(strcmp(input_us, "CREDITS") == 0)
     {
@@ -105,6 +111,20 @@ void shell(char* input_us)
         printf("%d ", (target[i] >> 8) & 0xFF);
         i++;
       }
+    }
+    else if(strcmp(input_us, "RANDOM") == 0)
+    {
+      int max = rand();
+      printf("%d\n", max);
+    }
+    else if(strcmp(input_us, "TIME") == 0)
+    {
+      printf("%ztime: %d:%d:%d", LIGHT_MAGENTA_ON_BLACK, time->hour + 1, time->minute, time->second);
+      free(time);
+    }
+    else if(strcmp(input_us, "DATE") == 0)
+    {
+      printf("%zToday is: %d.%d.%d", LIGHT_MAGENTA_ON_BLACK, time->day, time->month, time->year+1);
     }
     else if(strcmp(input_us, "EASTER") == 0)
     {
