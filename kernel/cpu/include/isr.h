@@ -6,7 +6,7 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "../../../common/include/types.h"
+#include <stdint.h>
 //define IRQ constans
 #define IRQ0 32
 #define IRQ1 33 
@@ -82,9 +82,13 @@ typedef struct{
     uint32_t int_no, err_code;
     uint32_t eip, cs, eflags, esp, ss;
 } registers_t;
-//initialize isr func
+/***********************************************
+* initialize ISR 
+************************************************/
 void isr_init();
-void isr_handler(registers_t *r);
+/******************************************************
+*/
+
 
 typedef void (*isr_t)(registers_t *r);
 void reg_interrupt_handler(uint8_t n, isr_t handler);

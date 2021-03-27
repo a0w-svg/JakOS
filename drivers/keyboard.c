@@ -4,8 +4,6 @@
 #include "../common/include/types.h"
 #include "../kernel/cpu/include/isr.h"
 #include "./include/screen.h"
-#include "../kernel/kmain.h"
-#include "../kernel/shell/include/shell.h"
 #include <stddef.h>
 #include <stdbool.h>
 #define SC_MAX 57 

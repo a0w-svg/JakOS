@@ -1,7 +1,7 @@
 #ifndef DMA_H
 #define DMA_H
 
-#include "../../../common/include/types.h"
+#include <stdint.h>
 
 #define DMA_MAX_CHANNELS 16
 #define DMA_CHANNELS_PER_DMAC 8

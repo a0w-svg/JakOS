@@ -1,10 +1,10 @@
 #ifndef IDT_H
 #define IDT_H
 
-#include "../../../common/include/types.h"
+#include <stdint.h>
 
 #define KERNEL_CS 0x08
-
+// idt gate struct
 typedef struct 
 {
     uint16_t low_offs;
@@ -21,9 +21,12 @@ typedef struct
 }__attribute__((packed)) idt_register_t;
 
 #define IDT_ENTR 256
-
+/**************************************************
+* Set idt gate max 256 gates // interrupts
+**************************************************/
 void idt_set_gate(int n, uint32_t handler);
+/************************************************
+ * Initialize Interrupt Descritor Table
+*************************************************/
 void idt_init();
-
-
 #endif

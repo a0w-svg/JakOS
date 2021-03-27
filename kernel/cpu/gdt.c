@@ -19,7 +19,7 @@ gdt_entry_t gdt[5];
 gdt_ptr_t gp;
 
 
-void set_gdt_gate(int num, unsigned long base, unsigned long limit,
+void set_gdt_gate(int num, size_t base, size_t limit,
      uint8_t access, uint8_t gran)
 {
     gdt[num].base_low = (base & 0xFFFF);
@@ -47,5 +47,6 @@ void init_gdt()
     set_gdt_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
     // user mode data segment
     set_gdt_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
+    // flush gdt
     gdt_flush();
 }

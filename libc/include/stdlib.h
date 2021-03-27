@@ -1,5 +1,5 @@
-#ifndef MATH_H
-#define MATH_H
+#ifndef STDLIB_H
+#define STDLIB_H
 /*****************************************
 * Get a random number
 ******************************************/
@@ -13,7 +13,8 @@ void srand(unsigned int seed);
 *  
 *********************************************/
 int maxrand(int seed, int max);
-/***********************************************
- * 
-************************************************/
+/*************************************************************
+ * stops the program for the specified number of milliseconds
+**************************************************************/
+void Sleep(unsigned int ticks);
 #endif

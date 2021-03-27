@@ -1,6 +1,7 @@
 #include "./include/stdlib.h"
 #include "../kernel/cpu/include/rtc.h"
 #include "../kernel/mm/include/kmalloc.h"
+#include "../kernel/cpu/include/pit.h"
 #include <stdint.h>
 
 unsigned long next = 1;
@@ -22,4 +23,9 @@ int maxrand(int seed, int max)
 {
     random_seed = random_seed + seed * 1103515245 + 12345;
     return (uint32_t)(random_seed / 65536) % (max + 1);
+}
+
+void Sleep(unsigned int ticks)
+{
+    sleep(ticks);
 }

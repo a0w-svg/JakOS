@@ -5,6 +5,7 @@
 ***********************************************************/
 
 #include "./include/idt.h"
+#include "../../common/include/types.h"
 
 idt_gate_t idt[IDT_ENTR];
 

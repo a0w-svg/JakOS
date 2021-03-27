@@ -3,14 +3,12 @@
 #include "../../drivers/ports/include/serial_port.h"
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
-#include "../../libc/include/mem.h"
 #include "../../libc/include/stdio.h"
 #include "../../drivers/disks/include/ata.h"
 #include "../../libc/include/stdlib.h"
 #include "../cpu/include/rtc.h"
 #include "../mm/include/kmalloc.h"
 #include "../../libc/include/draw.h"
-#include "../cpu/include/pit.h"
 
 void shell(char* input_us)
 {
@@ -19,7 +17,7 @@ void shell(char* input_us)
     if(strcmp(input_us, "SHUTDOWN") == 0)
     {
       printf("%zgoodbye :(\n", DARK_GREY_ON_BLACK);
-      sleep(200);
+      Sleep(150);
       port_word_out(0xB004, 0x2000);
       port_word_out(0x604, 0x2000);
       port_word_out(0x4004, 0x3400);
@@ -142,8 +140,4 @@ void shell(char* input_us)
       printf("wrong command please enter currect command\n");
     }
     printf("%z\nJakOS>", GREEN_ON_BLACK); 
-}
-void return_shell()
-{
-    clean();
 }

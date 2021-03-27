@@ -1,29 +1,20 @@
-#include "../drivers/include/screen.h"
 #include "./cpu/include/gdt.h"
 #include "./cpu/include/isr.h"
-#include "./cpu/include/idt.h"
 #include "../common/include/types.h"
-#include "./cpu/include/pit.h"
-#include "./cpu/include/rtc.h"
-#include "kmain.h"
-#include "../libc/include/mem.h"
-#include "../libc/include/string.h"
-#include "../boot/multiboot.h"
-#include "../drivers/include/speaker.h"
 #include "./mm/include/kmalloc.h"
 #include "../drivers/ports/include/serial_port.h"
 #include "./mm/include/paging.h"
-#include "./time/include/cmos.h"
 #include "./shell/include/shell.h"
 #include "../libc/include/stdio.h"
 #include "../boot/multiboot.h"
 #include <stddef.h>
 
 #define CHECK_FLAG(flags, bit) ((flags) & (1 << (bit)))
+
 void kmain(unsigned long magic, unsigned long addr)
 { 
   multiboot_info_t* mbi;
-  screen_clean();
+  clean();
   printf("\t\t\t\t\tTEST configuration\n");
   if(magic != MULTIBOOT_BOOTLOADER_MAGIC)
   {

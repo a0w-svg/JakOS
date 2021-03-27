@@ -1,5 +1,4 @@
 #include "./include/paging.h"
-#include "../../drivers/include/screen.h"
 #include "../../libc/include/mem.h"
 #include "../../libc/include/stdio.h"
 page_t page;
@@ -19,7 +18,7 @@ void paging_map(uint32_t virt, uint32_t phys_addr)
 void init_paging()
 {
     mem_set(&page,  0, sizeof(page));
-    printk("enable paging\n");
+    printf("enable paging\n");
     page.page_dir = (uint32_t *)0x400000;
     page.page_dir_location = (uint32_t)page.page_dir;
     page.page_prev  = (uint32_t *)0x404000;

@@ -54,6 +54,8 @@ char *exception_messages[] = {
     "Reserved",
     "Reserved"
 };
+// isr handler
+void isr_handler(registers_t *r);
 //initialize isr function
 void isr_init()
 {
@@ -121,9 +123,9 @@ void isr_init()
     //initialize IDT
     idt_init();
 }
-//detect and display type intterrupt
+//detect and display type interrupt
 void isr_handler(registers_t *r) {
-    printf("received interrupt: %x\n %s\n", r->int_no, exception_messages[r->int_no]);
+    printf("received interrupt: %x - %s\n", r->int_no, exception_messages[r->int_no]);
 }
 //register interrupt handler func
 void reg_interrupt_handler(uint8_t n, isr_t handler)
