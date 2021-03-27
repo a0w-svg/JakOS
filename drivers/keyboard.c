@@ -2,10 +2,12 @@
 #include "../common/include/port.h"
 #include "../libc/include/string.h"
 #include "../common/include/types.h"
+#include "../kernel/cpu/include/isr.h"
 #include "./include/screen.h"
 #include "../kernel/kmain.h"
 #include "../kernel/shell/include/shell.h"
 #include <stddef.h>
+#include <stdbool.h>
 #define SC_MAX 57 
 static char temp[256];
 size_t i = 0;
@@ -261,11 +263,11 @@ void get_string(char* buf, size_t size)
             {
             write++;
             char a[2] = {temp[i], '\0'};
-            printk(a);
+            printk_c(a, LIGHT_RED_ON_BLACK);
             }
             else
             {
-                printk("\n");
+                printk_c("\n", LIGHT_RED_ON_BLACK);
             }
         }
     }

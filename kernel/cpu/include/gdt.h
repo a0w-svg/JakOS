@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 
-
+/*
+*/
 extern void gdt_flush();
 
 void set_gdt_gate(int num, unsigned long base, unsigned long limit,

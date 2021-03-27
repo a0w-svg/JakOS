@@ -41,7 +41,7 @@ void int_to_ascii(char* buffer, int base, int d)
     }
 
 }
-int atoi(const char* str)
+int atoi(char* str)
 {
     int sign = 1, base = 0, i = 0;
     // if a string contains whitespace, ignore it
@@ -76,7 +76,7 @@ int atoi(const char* str)
         before: Hello
         after: olleH
 ********************************************/
-void reverse(char s[])
+void reverse(char* s)
 {
     int c, i, j; // declare  variables
     for(i = 0, j = strlen(s)-1; i < j; i++, j--)

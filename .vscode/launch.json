@@ -14,7 +14,7 @@
     "miDebuggerArgs": "",
     "customLaunchSetupCommands": [
         {
-            "text": "target remote localhost:1234",
+            "text": "target remote localhost:39320",
             "description": "Connect to QEMU remote debugger"
         }
     ],

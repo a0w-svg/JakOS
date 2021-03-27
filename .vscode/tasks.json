@@ -5,7 +5,7 @@
     "label": "Launch QEMU",
     "type": "shell",
     "linux": {
-        "command": "qemu-system-i386 -S -gdb tcp::1234 -boot d -cdrom JakOS.iso -m 512 &"
+        "command": "qemu-system-i386 -S -gdb tcp::39320 -boot d -cdrom JakOS.iso -m 512 &"
     }
 }]
 }

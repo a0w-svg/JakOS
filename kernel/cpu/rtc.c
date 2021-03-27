@@ -87,15 +87,15 @@ void rtc_handler(registers_t* r)
 
     if(!(reg_b & 0x4))
     {
-        global_time->second = (global_time->second & 0x0F) + ((global_time->second / 16) * 10);
-        global_time->minute = (global_time->minute & 0x0F) + ((global_time->minute / 16) * 10);
+        global_time->second = (global_time->second & 0x0F) + ((global_time->second >> 4) * 10);
+        global_time->minute = (global_time->minute & 0x0F) + ((global_time->minute >> 4) * 10);
         global_time->hour   = ((global_time->hour & 0x0F) + (((global_time->hour & 0x70) / 16) * 10)) |
          (global_time->hour & 0x80);
-        global_time->day = (global_time->day & 0x0F) + ((global_time->day / 16) * 10);
-        global_time->month = (global_time->month & 0x0F) + ((global_time->month / 16) * 10);
-        global_time->year = (global_time->year & 0x0F) * ((global_time->year / 16) * 10);
+        global_time->day = (global_time->day & 0x0F) + ((global_time->day >> 4) * 10);
+        global_time->month = (global_time->month & 0x0F) + ((global_time->month >>  4) * 10);
+        global_time->year = (global_time->year & 0x0F) * ((global_time->year >>  4) * 10);
         if(century_reg != 0)
-            century = (century & 0x0F) + ((century / 16) * 10);
+            century = (century & 0x0F) + ((century << 4) * 10);
     }
 
     if(!(reg_b & 0x2) && (global_time->hour & 0x80))

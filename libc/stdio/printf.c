@@ -4,6 +4,7 @@
 #include "../include/stdio.h"
 #include "../include/string.h"
 #include "../../drivers/include/screen.h"
+#include "../../common/include/types.h"
 #include <stdint.h>
 #include <stddef.h>
 
@@ -20,7 +21,7 @@ int printf(const char* restrict format, ...) {
 	va_list parameters;
 	// creates the va_list with the total length stored in the format variable
 	va_start(parameters, format);
-	uint8_t color = 0;
+	uint8_t color = CYAN_ON_BLACK;
 	// buffer used to convert numbers to strings.
 	char buf[20];
 	// The Variable written stored number of characters written out.

@@ -12,14 +12,14 @@ void int_to_ascii(char* buffer, int base, int d);
 /*********************************************
  * convert ascii to int and return int
 **********************************************/
-int atoi(const char* str);
+int atoi(char* str);
 /*******************************************
  reverses a string
     example:
         before: Hello
         after: olleH
 ********************************************/
-void reverse(char s[]);
+void reverse(char *s);
 /*******************************************
     return the string length
 ********************************************/

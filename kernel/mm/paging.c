@@ -14,20 +14,12 @@ void paging_map(uint32_t virt, uint32_t phys_addr)
     }
     page.page_dir[id] = ((uint32_t)page.page_prev) | 3;
     page.page_prev = (uint32_t *)(((uint32_t)page.page_prev) + 4096);
-    /*
-    printk("Mapping ");
-    printk_hex(virt);
-    printk(" ");
-    printk_dec(id);
-    printk(" ");
-    printk_hex(phys_addr);
-    */
-   printf("Mapping %x : %d : %x\n", virt, id, phys_addr);
+    printf("\tMapping %x : %d : %x\n", virt, id, phys_addr);
 }
 void init_paging()
 {
     mem_set(&page,  0, sizeof(page));
-    printk("HOI\n");
+    printk("enable paging\n");
     page.page_dir = (uint32_t *)0x400000;
     page.page_dir_location = (uint32_t)page.page_dir;
     page.page_prev  = (uint32_t *)0x404000;

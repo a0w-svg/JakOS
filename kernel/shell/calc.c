@@ -1,35 +1,34 @@
 #include "./include/calc.h"
-#include "../../drivers/include/keyboard.h"
-#include "../../drivers/include/screen.h"
 #include "../../libc/include/string.h"
 #include "../../libc/include/stdio.h"
+#include "../../common/include/types.h"
 int a = 0, b = 0, result = 0;
 void calc()
 {
-    printf("Calculator:\n");
+    printf("%zCalculator:\n", LIGHT_MAGENTA_ON_BLACK);
     while(1)
     {
-        printf("\t\toptions\n");
+        printf("\t\t%zoptions\n", LIGHT_BLUE_ON_BLACK);
         printf("\t\t\t= - add two numbers\n");
         printf("\t\t\t- - subtract two numbers\n");
         printf("\t\t\t; - multiply two numbers\n");
         printf("\t\t\t/ - divide two numbers\n");
         printf("\t\t\t\\ - remainer of dividing two numbers\n");
         printf("\t\t\tQ - quit\n");
-        printf("enter your option: ");
+        printf("%zenter your option: ", GREEN_ON_BLACK);
         char in[2];
-        get_string(in, 1);
+        gets(in, 1);
         if(*in != 'Q')
         {
             if(*in == '=' || *in == '-' || *in == ';' || *in == '/' || *in == '\\')
             {
-                printf("enter the first number: ");
+                printf("%zenter the first number: ", GREEN_ON_BLACK);
                 char first[20];
-                get_string(first, 20);
+                gets(first, 20);
                 a = atoi(first);
-                printf("enter the second number: ");
+                printf("%zenter the second number: ", GREEN_ON_BLACK);
                 char second[20];
-                get_string(second, 20);
+                gets(second, 20);
                 b = atoi(second);
                 if(*in == '=')
                     printf("result: %d\n", a + b);
@@ -58,7 +57,7 @@ void calc()
             }
             else
             {
-                printf("Wrong operation, try again\n");
+                printf("%zWrong operation, try again\n", RED_ON_BLACK);
             }
         }
         else
