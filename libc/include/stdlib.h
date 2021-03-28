@@ -17,4 +17,8 @@ int maxrand(int seed, int max);
  * stops the program for the specified number of milliseconds
 **************************************************************/
 void Sleep(unsigned int ticks);
+/**************************************************************
+ * Encrypt string
+***************************************************************/
+void encrypt(char plainText[]);
 #endif

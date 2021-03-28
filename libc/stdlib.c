@@ -2,6 +2,8 @@
 #include "../kernel/cpu/include/rtc.h"
 #include "../kernel/mm/include/kmalloc.h"
 #include "../kernel/cpu/include/pit.h"
+#include "./include/stdio.h"
+#include "./include/string.h"
 #include <stdint.h>
 
 unsigned long next = 1;
@@ -28,4 +30,15 @@ int maxrand(int seed, int max)
 void Sleep(unsigned int ticks)
 {
     sleep(ticks);
+}
+
+void encrypt(char plainText[])
+{
+    size_t len = strlen(plainText);
+    char key = 'Q';
+    for(size_t i = 0; i < len; i++)
+    {
+        plainText[i] = plainText[i] ^ key;
+        printf("%c", plainText[i]);
+    }
 }

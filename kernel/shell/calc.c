@@ -1,4 +1,4 @@
-#include "./include/calc.h"
+#include "./include/shell_func.h"
 #include "../../libc/include/string.h"
 #include "../../libc/include/stdio.h"
 #include "../../common/include/types.h"

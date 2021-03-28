@@ -1,5 +1,5 @@
 #include "./include/shell.h"
-#include "./include/calc.h"
+#include "./include/shell_func.h"
 #include "../../drivers/ports/include/serial_port.h"
 #include "../../libc/include/string.h"
 #include "../../common/include/port.h"
@@ -85,6 +85,13 @@ void shell(char* input_us)
       gets(name, 80);
       printf("Hi, %s", name);
     }
+    else if(strcmp(input_us, "ENCRYPT") == 0)
+    {
+      char plain[200];
+      printf("Enter a string: ");
+      gets(plain, 198);
+      encrypt(plain);
+    }
     else if(strcmp(input_us, "TEST") == 0)
     {
       uint32_t* target = 0;
@@ -113,13 +120,11 @@ void shell(char* input_us)
     }
     else if(strcmp(input_us, "RANDOM") == 0)
     {
-      int max = rand();
-      printf("%d", max);
-      DrawLine(10, LIGHT_BLUE_ON_GREEN);
+      random();
     }
     else if(strcmp(input_us, "TIME") == 0)
     {
-      printf("%ztime: %d:%d:%d", LIGHT_MAGENTA_ON_BLACK, time->hour + 1, time->minute, time->second);
+      printf("%ztime: %d:%d:%d", LIGHT_MAGENTA_ON_BLACK, time->hour, time->minute, time->second);
       free(time);
     }
     else if(strcmp(input_us, "DATE") == 0)
