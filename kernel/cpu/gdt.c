@@ -22,20 +22,19 @@ gdt_ptr_t gp;
 void set_gdt_gate(int num, size_t base, size_t limit,
      uint8_t access, uint8_t gran)
 {
-    gdt[num].base_low = (base & 0xFFFF);
-    gdt[num].base_middle = (base >> 16) & 0xFF;
-    gdt[num].base_high = (base >> 24) & 0xFF;
-
-    gdt[num].limit_low = (limit & 0xFFFF);
-    gdt[num].granularity = ((limit >> 16) & 0xFFFF);
-    
-    gdt[num].granularity |= (gran & 0xF0);
-    gdt[num].access = access;
+    gdt_entry_t* gate = &gdt[num];
+    gate->base_low = (base & 0xFFFF);
+    gate->base_middle = (base >> 16) & 0xFF;
+    gate->base_high = (base >> 24) & 0xFF;
+    gate->limit_low = (limit & 0xFFFF);
+    gate->granularity = ((limit >> 16) & 0x0F);
+    gate->granularity |= (gran & 0xF0);
+    gate->access = access;
 }
 
 void init_gdt()
 {
-   gp.limit = (sizeof(gdt_entry_t) * 3) - 1;
+   gp.limit = (sizeof(gdt_entry_t) * 5) - 1;
    gp.base = &gdt[0];
     //NULL descriptor
    set_gdt_gate(0, 0, 0, 0, 0);

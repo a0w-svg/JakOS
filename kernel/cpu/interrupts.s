@@ -73,7 +73,6 @@ isr2:
     push byte 2
     jmp isr_common_stub
 isr3:
-    cli
     push byte 0
     push byte 3
     jmp isr_common_stub
@@ -128,7 +127,6 @@ isr17:
     push byte 17
     jmp isr_common_stub
 isr18:
-    cli
     push byte 0
     push byte 18
     jmp isr_common_stub

@@ -53,6 +53,7 @@ build-iso: kernel.bin menu.lst
 	nasm $< -f bin -o $@
 #clean compiled files
 clean:
-	rm -rf *.bin *.dis *.o JakOS.iso *.
+	rm -rf *.bin *.dis *.o JakOS.iso 
 
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o kernel/cpu/*.o libc/*.o kernel/mm/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o kernel/cpu/*.o  kernel/fs/*.o libc/*.o kernel/mm/*.o kernel/shell/*.o common/*.o
+	rm -rf libc/*.o libc/stdio/*.o
