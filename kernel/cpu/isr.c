@@ -138,9 +138,9 @@ void irq_handler(registers_t *r)
     //if r.int_no greater than 40 or equal 40
     if(r->int_no >= 40)
     {
-        // slave mode
+        // primary mode
         port_byte_out(0xA0, 0x20);
-        // master mode 
+        // secondary mode 
     }
     port_byte_out(0x20, 0x20);
     if(interrupt_handler[r->int_no] != 0)
